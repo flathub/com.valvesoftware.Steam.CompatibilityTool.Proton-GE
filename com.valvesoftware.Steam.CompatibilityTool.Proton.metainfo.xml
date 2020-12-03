@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="addon">
-  <id>com.valvesoftware.Steam.CompatibilityTool.ProtonGECustom</id>
+  <id>com.valvesoftware.Steam.CompatibilityTool.Proton-GE</id>
   <extends>com.valvesoftware.Steam</extends>
-  <name>Proton GE Custom (community build)</name>
-  <summary>Latest Proton GE Custom version built on the Flatpak Freedesktop SDK</summary>
+  <name>Proton-GE (community build)</name>
+  <summary>Latest Proton-GE version built on the Flatpak Freedesktop SDK</summary>
   <url type="homepage">https://github.com/GloriousEggroll/proton-ge-custom</url>
   <project_license>BSD-3-Clause and LGPL-2.1 and zlib-acknowledgement and Zlib and OFL-1.1 and MIT and MPL-2.0 and LicenseRef-proprietary</project_license>
   <metadata_license>CC0-1.0</metadata_license>
