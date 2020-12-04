@@ -25,6 +25,7 @@ build-options:
                      :/usr/lib/x86_64-linux-gnu/pkgconfig\
                      :/usr/share/pkgconfig"
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib
+    PYTHONPATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/python3.8/site-packages
   cflags: &optflags -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing
   cflags-override: true
   cxxflags: *optflags
@@ -49,7 +50,7 @@ x-proton-source: &proton_source
   type: archive
   url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/5.21-GE-1/proton-ge-custom-src.tar.xz"
   strip-components: 0
-  sha256: 0cc69c0fb93d7e11d5619528965935a4b82d57e9452cc4d29066c5a1c8568375
+  sha256: f0edd593a1c934f81fc385d44f3a3ceeca11693ca3918194233572e064d4f4d1
 
 cleanup:
   - "*.a"
@@ -821,15 +822,47 @@ modules:
         sha256: ea5246e4c91d1aa1226658e1749b6e5d0e9353b52b14df79c4b93b6e61a3c59e
 
 
-  - name: default-prefix
-    build-options:
-      env:
-        WINEPREFIX: /app/share/steam/compatibilitytools.d/Proton-GE/share/default_pfx
-        LC_ALL: C
-    buildsystem: simple
-    build-commands:
-      #FIXME unclever way to wait for all child procs
-      - strace -e trace=none -f wine wineboot
+  - name: fonts
+    buildsystem: autotools
+    no-autogen: true
+    make-args:
+      - fonts
+    no-make-install: true
+    post-install:
+      - find obj-fonts/ -xtype f \( -name "*.otf" -o -name "*.ttf" \) -ls -exec install -Dm0644 -t ${FLATPAK_DEST}/share/fonts/ {} \;
+    sources:
+      - *proton_source
+      - type: shell
+        commands:
+          - ./configure.sh --no-steam-runtime
+    modules:
+      - name: fontforge
+        buildsystem: cmake-ninja
+        builddir: true
+        config-opts:
+          - -DCMAKE_BUILD_TYPE=Release
+          - -DBUILD_SHARED_LIBS=OFF
+          - -DENABLE_GUI=OFF
+          - -DENABLE_NATIVE_SCRIPTING=ON
+          - -DENABLE_PYTHON_SCRIPTING=OFF
+          - -DENABLE_PYTHON_EXTENSION=OFF
+          - -DENABLE_LIBSPIRO=OFF
+          - -DENABLE_LIBUNINAMESLIST=OFF
+          - -DENABLE_LIBGIF=OFF
+          - -DENABLE_LIBJPEG=OFF
+          - -DENABLE_LIBPNG=OFF
+          - -DENABLE_LIBREADLINE=OFF
+          - -DENABLE_LIBTIFF=OFF
+          - -DENABLE_WOFF2=OFF
+          - -DENABLE_DOCS=OFF
+        cleanup:
+          - "*"
+        sources:
+          - type: archive
+            url: "https://github.com/fontforge/fontforge/releases/download/20201107/fontforge-20201107.tar.xz"
+            sha256: 68bcba8f602819eddc29cd356ee13fafbad7a80d19b652d354c6791343476c78
+      - files/afdko/python3-requirements-dev.json
+      - files/afdko/python3-requirements.json
 
 
   - name: protonfixes
@@ -841,6 +874,17 @@ modules:
         ${FLATPAK_DEST}
     sources:
       - *proton_source
+
+
+  - name: default-prefix
+    build-options:
+      env:
+        WINEPREFIX: /app/share/steam/compatibilitytools.d/Proton-GE/share/default_pfx
+        LC_ALL: C
+    buildsystem: simple
+    build-commands:
+      #FIXME unclever way to wait for all child procs
+      - strace -e trace=none -f wine wineboot
 
 
   - name: proton
