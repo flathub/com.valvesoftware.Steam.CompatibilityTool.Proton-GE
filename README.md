@@ -10,7 +10,7 @@ This unofficial build isn't supported by GloriousEggroll nor Valve and wasn't te
 
 First [add](https://flatpak.org/setup) Flathub repository and install Steam from there, if not already. Then run
 ```
-flatpak install com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+flatpak install flathub com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 ```
 
 ## Running
