@@ -48,9 +48,9 @@ x-compat-i386-opts: &compat_i386_opts
 
 x-proton-source: &proton_source
   type: archive
-  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/5.22-GE-1/proton-ge-custom-src.tar.xz"
+  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/5.21-GE-1-2/proton-ge-custom-src.tar.xz"
   strip-components: 0
-  sha256: 1aef1371fa80251d61a44c639e457eb5b8e5884c6e6d301ce1ca0a20477849f8
+  sha256: 78a6facf43dca2ca5cc711d6ecd4b1c18ef7e65cc89ea5dae751419da406e37d
 
 cleanup:
   - "*.a"
@@ -828,6 +828,7 @@ modules:
     make-args:
       - fonts
     no-make-install: true
+    no-parallel-make: true
     post-install:
       - find obj-fonts/ -xtype f \( -name "*.otf" -o -name "*.ttf" \) -ls -exec install -Dm0644 -t ${FLATPAK_DEST}/share/fonts/ {} \;
     sources:
@@ -888,9 +889,6 @@ modules:
 
 
   - name: proton
-    build-options:
-      env:
-        PROTON_VERSION: 5.21-GE-1
     buildsystem: simple
     build-commands:
       - install -Dm755 -t ${FLATPAK_DEST}/
@@ -903,12 +901,19 @@ modules:
       - install -Dm644 toolmanifest_noruntime.vdf ${FLATPAK_DEST}/toolmanifest.vdf
       - install -Dm644 dist.LICENSE ${FLATPAK_DEST}/LICENSE
       - |
+        set -e -o pipefail
+        PROTON_VERSION=$(cat VERSION)
+        PROTON_DATE=$(cat DATE)
         TIMESTAMP=$(date +%s)
         echo ${TIMESTAMP} proton_flatpak-${PROTON_VERSION} > ${FLATPAK_DEST}/version
         sed \
           -e "s/@VERSION@/${PROTON_VERSION}/g" \
           -e "s/@BUILD@/${TIMESTAMP}/g" \
           -i ${FLATPAK_DEST}/compatibilitytool.vdf
+        sed \
+          -e "s/@VERSION@/${PROTON_VERSION}/g" \
+          -e "s/@DATE@/${PROTON_DATE}/g" \
+          -i ${FLATPAK_ID}.metainfo.xml
       - |
         cd ${FLATPAK_DEST}
         mkdir dist
