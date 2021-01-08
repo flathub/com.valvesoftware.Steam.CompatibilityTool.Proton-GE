@@ -704,6 +704,47 @@ modules:
     sources: *vrclient_sources
 
 
+  - name: wineopenxr
+    subdir: wineopenxr
+    build-options:
+      config-opts:
+        - -L${FLATPAK_DEST}/lib
+        - -L${FLATPAK_DEST}/lib/wine
+    config-opts: &wineopenxr_config_opts
+      - --nosource-fix
+      - --nolower-include
+      - --nodlls
+      - --nomsvcrt
+      - -I${FLATPAK_DEST}/include
+      - -I${FLATPAK_DEST}/include/wine
+      - -I${FLATPAK_DEST}/include/wine/windows
+      - -I../wine/include
+      - -lopenxr_loader
+      - -ldxgi
+      - -lvulkan
+      - --dll
+      - .
+    build-commands:
+      - winebuild --dll --fake-module -E wineopenxr.spec -o wineopenxr.dll.fake
+    no-make-install: true
+    post-install:
+      - install -Dm755 wineopenxr.dll.so -t ${FLATPAK_DEST}/lib/wine/
+      - install -Dm755 wineopenxr.dll.fake ${FLATPAK_DEST}/lib/wine/fakedlls/wineopenxr.dll
+    sources: &wineopenxr_sources
+      - *proton_source
+      - type: file
+        path: winemaker-configure.sh
+        dest: wineopenxr
+        dest-filename: configure
+    modules:
+
+      - name: openxr
+        subdir: OpenXR-SDK
+        buildsystem: cmake-ninja
+        sources:
+          - *proton_source
+
+
   - name: vkd3d-proton
     subdir: vkd3d-proton
     buildsystem: meson
