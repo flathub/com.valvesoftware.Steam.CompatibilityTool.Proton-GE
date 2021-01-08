@@ -927,6 +927,10 @@ modules:
     build-commands:
       #FIXME unclever way to wait for all child procs
       - strace -e trace=none -f wine wineboot
+    post-install:
+      - install -Dm644 wineopenxr/wineopenxr64.json ${WINEPREFIX}/drive_c/openxr/wineopenxr64.json
+    sources:
+      - *proton_source
 
 
   - name: proton
