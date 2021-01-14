@@ -749,6 +749,8 @@ modules:
     subdir: vkd3d-proton
     buildsystem: meson
     build-options:
+      ldflags: &mingw-ldflags ""
+      ldflags-override: true
       config-opts:
         - --cross-file=../build-win64.txt
         - --cross-file=../meson-ccache-mingw64.txt
@@ -779,6 +781,8 @@ modules:
     subdir: vkd3d-proton
     buildsystem: meson
     build-options:
+      ldflags: *mingw-ldflags
+      ldflags-override: true
       config-opts:
         - --cross-file=../build-win32.txt
         - --cross-file=../meson-ccache-mingw32.txt
@@ -794,6 +798,8 @@ modules:
     subdir: dxvk
     buildsystem: meson
     build-options: &dxvk_64_build_options
+      ldflags: *mingw-ldflags
+      ldflags-override: true
       config-opts:
         - --cross-file=../build-win64.txt
         - --cross-file=../meson-ccache-mingw64.txt
@@ -824,6 +830,8 @@ modules:
     subdir: dxvk
     buildsystem: meson
     build-options: &dxvk_32_build_options
+      ldflags: *mingw-ldflags
+      ldflags-override: true
       config-opts:
         - --cross-file=../build-win32.txt
         - --cross-file=../meson-ccache-mingw32.txt
