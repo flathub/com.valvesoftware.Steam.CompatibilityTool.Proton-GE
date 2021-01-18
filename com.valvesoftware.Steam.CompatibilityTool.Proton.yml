@@ -328,11 +328,11 @@ modules:
     buildsystem: meson
     builddir: true
     config-opts: &gst-plugins-ugly-config-opts
-      - -Dgobject-cast-checks='disabled'
-      - -Dglib-asserts='disabled'
-      - -Dglib-checks='disabled'
-      - -Dglib-checks='disabled'
-      - -Ddoc='disabled'
+      - -Dgobject-cast-checks=disabled
+      - -Dglib-asserts=disabled
+      - -Dglib-checks=disabled
+      - -Dglib-checks=disabled
+      - -Ddoc=disabled
       - -Dexamples=disabled
       - -Dtests=disabled
       - -Dgtk_doc=disabled
