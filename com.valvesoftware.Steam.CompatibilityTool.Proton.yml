@@ -48,9 +48,9 @@ x-compat-i386-opts: &compat_i386_opts
 
 x-proton-source: &proton_source
   type: archive
-  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/5.21-GE-1-2/proton-ge-custom-src.tar.xz"
+  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.0-GE-1-1/proton-ge-custom-src.tar.xz"
   strip-components: 0
-  sha256: 78a6facf43dca2ca5cc711d6ecd4b1c18ef7e65cc89ea5dae751419da406e37d
+  sha256: f6a3b8f391041357a9a760fb10f6105d87343d25f7d2e29cda8eedb7b63032e2
 
 cleanup:
   - "*.a"
@@ -328,11 +328,11 @@ modules:
     buildsystem: meson
     builddir: true
     config-opts: &gst-plugins-ugly-config-opts
-      - -Dgobject-cast-checks='disabled'
-      - -Dglib-asserts='disabled'
-      - -Dglib-checks='disabled'
-      - -Dglib-checks='disabled'
-      - -Ddoc='disabled'
+      - -Dgobject-cast-checks=disabled
+      - -Dglib-asserts=disabled
+      - -Dglib-checks=disabled
+      - -Dglib-checks=disabled
+      - -Ddoc=disabled
       - -Dexamples=disabled
       - -Dtests=disabled
       - -Dgtk_doc=disabled
@@ -704,10 +704,53 @@ modules:
     sources: *vrclient_sources
 
 
+  - name: wineopenxr
+    subdir: wineopenxr
+    build-options:
+      config-opts:
+        - -L${FLATPAK_DEST}/lib
+        - -L${FLATPAK_DEST}/lib/wine
+    config-opts: &wineopenxr_config_opts
+      - --nosource-fix
+      - --nolower-include
+      - --nodlls
+      - --nomsvcrt
+      - -I${FLATPAK_DEST}/include
+      - -I${FLATPAK_DEST}/include/wine
+      - -I${FLATPAK_DEST}/include/wine/windows
+      - -I../wine/include
+      - -lopenxr_loader
+      - -ldxgi
+      - -lvulkan
+      - --dll
+      - .
+    build-commands:
+      - winebuild --dll --fake-module -E wineopenxr.spec -o wineopenxr.dll.fake
+    no-make-install: true
+    post-install:
+      - install -Dm755 wineopenxr.dll.so -t ${FLATPAK_DEST}/lib/wine/
+      - install -Dm755 wineopenxr.dll.fake ${FLATPAK_DEST}/lib/wine/fakedlls/wineopenxr.dll
+    sources: &wineopenxr_sources
+      - *proton_source
+      - type: file
+        path: winemaker-configure.sh
+        dest: wineopenxr
+        dest-filename: configure
+    modules:
+
+      - name: openxr
+        subdir: OpenXR-SDK
+        buildsystem: cmake-ninja
+        sources:
+          - *proton_source
+
+
   - name: vkd3d-proton
     subdir: vkd3d-proton
     buildsystem: meson
     build-options:
+      ldflags: &mingw-ldflags ""
+      ldflags-override: true
       config-opts:
         - --cross-file=../build-win64.txt
         - --cross-file=../meson-ccache-mingw64.txt
@@ -738,6 +781,8 @@ modules:
     subdir: vkd3d-proton
     buildsystem: meson
     build-options:
+      ldflags: *mingw-ldflags
+      ldflags-override: true
       config-opts:
         - --cross-file=../build-win32.txt
         - --cross-file=../meson-ccache-mingw32.txt
@@ -753,6 +798,8 @@ modules:
     subdir: dxvk
     buildsystem: meson
     build-options: &dxvk_64_build_options
+      ldflags: *mingw-ldflags
+      ldflags-override: true
       config-opts:
         - --cross-file=../build-win64.txt
         - --cross-file=../meson-ccache-mingw64.txt
@@ -783,6 +830,8 @@ modules:
     subdir: dxvk
     buildsystem: meson
     build-options: &dxvk_32_build_options
+      ldflags: *mingw-ldflags
+      ldflags-override: true
       config-opts:
         - --cross-file=../build-win32.txt
         - --cross-file=../meson-ccache-mingw32.txt
@@ -886,6 +935,10 @@ modules:
     build-commands:
       #FIXME unclever way to wait for all child procs
       - strace -e trace=none -f wine wineboot
+    post-install:
+      - install -Dm644 wineopenxr/wineopenxr64.json ${WINEPREFIX}/drive_c/openxr/wineopenxr64.json
+    sources:
+      - *proton_source
 
 
   - name: proton
