@@ -48,9 +48,9 @@ x-compat-i386-opts: &compat_i386_opts
 
 x-proton-source: &proton_source
   type: archive
-  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.0-GE-1-1/proton-ge-custom-src.tar.xz"
+  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.1-GE-1-1/proton-ge-custom-src.tar.xz"
   strip-components: 0
-  sha256: f6a3b8f391041357a9a760fb10f6105d87343d25f7d2e29cda8eedb7b63032e2
+  sha256: c408275f769e366f30336901fffe579048bf6fcc9fb0fb524a8ab05e37cddebc
 
 cleanup:
   - "*.a"
