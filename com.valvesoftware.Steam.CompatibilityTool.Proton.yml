@@ -76,6 +76,39 @@ cleanup:
   - /lib/wine/*.def
   - /lib32/wine/*.def
 modules:
+  - name: gst-orc
+    subdir: gst-orc
+    buildsystem: meson
+    builddir: true
+    config-opts: &gst-orc-config-opts
+      - -Dorc-test=disabled
+      # common gstreamer build flags
+      - -Dexamples=disabled
+      - -Dtests=disabled
+      - -Dgtk_doc=disabled
+      - -Dintrospection=disabled
+      - -Dgobject-cast-checks=disabled
+      - -Dglib-asserts=disabled
+      - -Dglib-checks=disabled
+      - -Dnls=disabled
+      - -Dbenchmarks=disabled
+    sources:
+      - *proton_source
+
+  - name: gst-orc-32bit
+    subdir: gst-orc
+    only-arches:
+      - x86_64
+    build-options:
+      arch:
+        x86_64: *compat_i386_opts
+    buildsystem: meson
+    builddir: true
+    config-opts: *gst-orc-config-opts
+    sources:
+      - *proton_source
+
+
   - name: gstreamer
     subdir: gstreamer
     buildsystem: meson
@@ -107,38 +140,6 @@ modules:
     buildsystem: meson
     builddir: true
     config-opts: *gstreamer-config-opts
-    sources:
-      - *proton_source
-
-
-  - name: gst-orc
-    subdir: gst-orc
-    buildsystem: meson
-    builddir: true
-    config-opts: &gst-orc-config-opts
-      - -Dexamples=disabled
-      - -Dtests=disabled
-      - -Dgtk_doc=disabled
-      - -Dintrospection=disabled
-      - -Dgobject-cast-checks=disabled
-      - -Dglib-asserts=disabled
-      - -Dglib-checks=disabled
-      - -Dnls=disabled
-      - -Dbenchmarks=disabled
-      - -Dorc-test=disabled
-    sources:
-      - *proton_source
-
-  - name: gst-orc-32bit
-    subdir: gst-orc
-    only-arches:
-      - x86_64
-    build-options:
-      arch:
-        x86_64: *compat_i386_opts
-    buildsystem: meson
-    builddir: true
-    config-opts: *gst-orc-config-opts
     sources:
       - *proton_source
 
@@ -212,7 +213,7 @@ modules:
       - -Ddtmf=disabled
       - -Deffectv=disabled
       - -Dequalizer=disabled
-      - -Dgdk- -pixbuf=disabled
+      - -Dgdk-pixbuf=disabled
       - -Dgtk3=disabled
       - -Dgoom=disabled
       - -Dgoom2k1=disabled
@@ -226,6 +227,9 @@ modules:
       - -Dmonoscope=disabled
       - -Dmultifile=disabled
       - -Dmultipart=disabled
+      - -Disomp4=enabled
+      - -Dmatroska=enabled
+      - -Ddirectsound=enabled
       - -Doss=disabled
       - -Doss4=disabled
       - -Dpng=disabled
@@ -619,10 +623,13 @@ modules:
       - -I${FLATPAK_DEST}/include/wine
       - -I${FLATPAK_DEST}/include/wine/windows
       - -I../lsteamclient/steamworks_sdk_142
+      - -I../wine/include
+      - -I../openvr/headers
       - -L${FLATPAK_DEST}/lib32
       - -L${FLATPAK_DEST}/lib32/wine
       - -lsteam_api
       - -lole32
+      - -ldl
       - --guiexe
       - .
     make-args: *winemaker_m32_make_args
