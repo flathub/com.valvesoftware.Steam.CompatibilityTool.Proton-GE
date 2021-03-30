@@ -777,6 +777,7 @@ modules:
         dest: vkd3d-proton
         paths:
           - patches/vkd3d-proton/build-number-no-git.patch
+          - patches/vkd3d-proton/glslangvalidator-remove-unsupported-flags.patch
       - type: file
         dest: vkd3d-proton
         path: meson-ccache-mingw32.txt
