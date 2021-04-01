@@ -651,8 +651,8 @@ modules:
 
   - name: openvr
     subdir: openvr
-    buildsystem: cmake-ninja
-    post-install:
+    buildsystem: simple
+    build-commands:
       - install -Dm755 bin/win64/openvr_api.dll ${FLATPAK_DEST}/lib/wine/dxvk/openvr_api_dxvk.dll
       - install -Dm755 bin/win32/openvr_api.dll ${FLATPAK_DEST}/lib32/wine/dxvk/openvr_api_dxvk.dll
     sources:
