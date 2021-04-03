@@ -477,6 +477,11 @@ modules:
       - INSTALL_PROGRAM_FLAGS=-s
     sources: &wine_sources
       - *proton_source
+      - type: shell
+        dest: wine
+        commands:
+          - autoreconf -fiv
+          - tools/make_requests
 
   - name: wine-32bit
     subdir: wine
