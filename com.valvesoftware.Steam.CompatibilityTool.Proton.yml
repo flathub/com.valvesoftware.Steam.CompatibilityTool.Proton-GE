@@ -518,9 +518,6 @@ modules:
     sources: &media_converter_sources
       - *proton_source
       - type: file
-        path: files/media-converter/Cargo.lock
-        dest: media-converter
-      - type: file
         path: files/media-converter/config.toml
         dest: media-converter/.cargo
       - files/media-converter/generated-sources.json
