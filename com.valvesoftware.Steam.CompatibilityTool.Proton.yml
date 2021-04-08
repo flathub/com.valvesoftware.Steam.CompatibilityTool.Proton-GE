@@ -757,6 +757,16 @@ modules:
           - *proton_source
 
 
+  - name: glslang
+    buildsystem: cmake-ninja
+    cleanup:
+      - "*"
+    sources:
+      - type: archive
+        url: https://github.com/KhronosGroup/glslang/archive/refs/tags/11.2.0.tar.gz
+        sha256: 8ff2fcf9b054e4a4ef56fcd8a637322f827b2b176a592a618d63672ddb896e06
+
+
   - name: vkd3d-proton
     subdir: vkd3d-proton
     buildsystem: meson
@@ -768,6 +778,7 @@ modules:
         - --cross-file=../meson-ccache-mingw64.txt
         - --libdir=lib/wine/vkd3d-proton
         - --bindir=lib/wine/vkd3d-proton
+      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-GE/bin
     config-opts: &vkd3d-proton-config-opts
       - --buildtype=release
       - --strip
@@ -782,7 +793,6 @@ modules:
         dest: vkd3d-proton
         paths:
           - patches/vkd3d-proton/build-number-no-git.patch
-          - patches/vkd3d-proton/glslangvalidator-remove-unsupported-flags.patch
       - type: file
         dest: vkd3d-proton
         path: meson-ccache-mingw32.txt
@@ -801,6 +811,7 @@ modules:
         - --cross-file=../meson-ccache-mingw32.txt
         - --libdir=lib32/wine/vkd3d-proton
         - --bindir=lib32/wine/vkd3d-proton
+      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-GE/bin
     config-opts: *vkd3d-proton-config-opts
     post-install:
       - ln -sr ${FLATPAK_DEST}/lib{,32}/wine/vkd3d-proton/version
@@ -818,6 +829,7 @@ modules:
         - --cross-file=../meson-ccache-mingw64.txt
         - --libdir=lib/wine/dxvk
         - --bindir=lib/wine/dxvk
+      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-GE/bin
     config-opts: &dxvk_config_opts
       - --buildtype=release
       - --strip
@@ -850,6 +862,7 @@ modules:
         - --cross-file=../meson-ccache-mingw32.txt
         - --libdir=lib32/wine/dxvk
         - --bindir=lib32/wine/dxvk
+      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-GE/bin
     config-opts: *dxvk_config_opts
     post-install:
       - ln -sr ${FLATPAK_DEST}/lib{,32}/wine/dxvk/version
