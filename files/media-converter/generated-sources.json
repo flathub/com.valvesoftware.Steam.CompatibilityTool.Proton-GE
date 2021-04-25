@@ -236,8 +236,8 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/repository/archive.tar.gz?ref=634d231269ab9b68c722c5037d1c94bed97ba45c",
-        "sha256": "c00f41987694771ddd83f8c56b0739cb7816a641b1c5f46016b6c86255466d5d",
+        "url": "https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/archive/634d231269ab9b68c722c5037d1c94bed97ba45c/gst-plugins-rs-634d231269ab9b68c722c5037d1c94bed97ba45c.tar.gz",
+        "sha256": "53b496c20c62b0ef460a9af289e3c1a801f1adaa67779a6ace3999c4bcf9ac97",
         "dest": "media-converter/cargo/vendor/gst-plugin-version-helper"
     },
     {
@@ -257,8 +257,8 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs/repository/archive.tar.gz?ref=30a323e24cd6020c872e5d5acf02b880497ff102",
-        "sha256": "e5da6dfd31918d07849e4b67777d593725b0d79d7fa38feb7ff1740e9e2c03b2",
+        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs/-/archive/30a323e24cd6020c872e5d5acf02b880497ff102/gstreamer-rs-30a323e24cd6020c872e5d5acf02b880497ff102.tar.gz",
+        "sha256": "4cd1126b282d80968b956a9cb7c3b6971e8f94c08efecf4e84cc4667b7ee1dc6",
         "dest": "media-converter/cargo/vendor/gstreamer"
     },
     {
@@ -278,8 +278,8 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs/repository/archive.tar.gz?ref=30a323e24cd6020c872e5d5acf02b880497ff102",
-        "sha256": "e5da6dfd31918d07849e4b67777d593725b0d79d7fa38feb7ff1740e9e2c03b2",
+        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs/-/archive/30a323e24cd6020c872e5d5acf02b880497ff102/gstreamer-rs-30a323e24cd6020c872e5d5acf02b880497ff102.tar.gz",
+        "sha256": "4cd1126b282d80968b956a9cb7c3b6971e8f94c08efecf4e84cc4667b7ee1dc6",
         "dest": "media-converter/cargo/vendor/gstreamer-audio"
     },
     {
@@ -299,8 +299,8 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs-sys/repository/archive.tar.gz?ref=a20aae85e1bc976a97d1c942ff56f346fb2f8d4c",
-        "sha256": "c3713c5b0a50f8f694dda31fda1426ec064c3121cb368a2fa0f414749882886e",
+        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs-sys/-/archive/a20aae85e1bc976a97d1c942ff56f346fb2f8d4c/gstreamer-rs-sys-a20aae85e1bc976a97d1c942ff56f346fb2f8d4c.tar.gz",
+        "sha256": "b013ad9f14981e1656af8743087dd9f96e39a704fd46df01dff2321712aea4a6",
         "dest": "media-converter/cargo/vendor/gstreamer-audio-sys"
     },
     {
@@ -320,8 +320,8 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs/repository/archive.tar.gz?ref=30a323e24cd6020c872e5d5acf02b880497ff102",
-        "sha256": "e5da6dfd31918d07849e4b67777d593725b0d79d7fa38feb7ff1740e9e2c03b2",
+        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs/-/archive/30a323e24cd6020c872e5d5acf02b880497ff102/gstreamer-rs-30a323e24cd6020c872e5d5acf02b880497ff102.tar.gz",
+        "sha256": "4cd1126b282d80968b956a9cb7c3b6971e8f94c08efecf4e84cc4667b7ee1dc6",
         "dest": "media-converter/cargo/vendor/gstreamer-base"
     },
     {
@@ -341,8 +341,8 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs-sys/repository/archive.tar.gz?ref=a20aae85e1bc976a97d1c942ff56f346fb2f8d4c",
-        "sha256": "c3713c5b0a50f8f694dda31fda1426ec064c3121cb368a2fa0f414749882886e",
+        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs-sys/-/archive/a20aae85e1bc976a97d1c942ff56f346fb2f8d4c/gstreamer-rs-sys-a20aae85e1bc976a97d1c942ff56f346fb2f8d4c.tar.gz",
+        "sha256": "b013ad9f14981e1656af8743087dd9f96e39a704fd46df01dff2321712aea4a6",
         "dest": "media-converter/cargo/vendor/gstreamer-base-sys"
     },
     {
@@ -362,8 +362,8 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs-sys/repository/archive.tar.gz?ref=a20aae85e1bc976a97d1c942ff56f346fb2f8d4c",
-        "sha256": "c3713c5b0a50f8f694dda31fda1426ec064c3121cb368a2fa0f414749882886e",
+        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs-sys/-/archive/a20aae85e1bc976a97d1c942ff56f346fb2f8d4c/gstreamer-rs-sys-a20aae85e1bc976a97d1c942ff56f346fb2f8d4c.tar.gz",
+        "sha256": "b013ad9f14981e1656af8743087dd9f96e39a704fd46df01dff2321712aea4a6",
         "dest": "media-converter/cargo/vendor/gstreamer-sys"
     },
     {
@@ -383,8 +383,8 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs/repository/archive.tar.gz?ref=30a323e24cd6020c872e5d5acf02b880497ff102",
-        "sha256": "e5da6dfd31918d07849e4b67777d593725b0d79d7fa38feb7ff1740e9e2c03b2",
+        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs/-/archive/30a323e24cd6020c872e5d5acf02b880497ff102/gstreamer-rs-30a323e24cd6020c872e5d5acf02b880497ff102.tar.gz",
+        "sha256": "4cd1126b282d80968b956a9cb7c3b6971e8f94c08efecf4e84cc4667b7ee1dc6",
         "dest": "media-converter/cargo/vendor/gstreamer-video"
     },
     {
@@ -404,8 +404,8 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs-sys/repository/archive.tar.gz?ref=a20aae85e1bc976a97d1c942ff56f346fb2f8d4c",
-        "sha256": "c3713c5b0a50f8f694dda31fda1426ec064c3121cb368a2fa0f414749882886e",
+        "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer-rs-sys/-/archive/a20aae85e1bc976a97d1c942ff56f346fb2f8d4c/gstreamer-rs-sys-a20aae85e1bc976a97d1c942ff56f346fb2f8d4c.tar.gz",
+        "sha256": "b013ad9f14981e1656af8743087dd9f96e39a704fd46df01dff2321712aea4a6",
         "dest": "media-converter/cargo/vendor/gstreamer-video-sys"
     },
     {
