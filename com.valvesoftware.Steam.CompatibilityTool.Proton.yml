@@ -895,19 +895,19 @@ modules:
 
 
   - name: fonts
-    buildsystem: autotools
-    no-autogen: true
-    make-args:
-      - fonts
-    no-make-install: true
-    no-parallel-make: true
-    post-install:
-      - find obj-fonts/ -xtype f \( -name "*.otf" -o -name "*.ttf" \) -ls -exec install -Dm0644 -t ${FLATPAK_DEST}/share/fonts/ {} \;
+    buildsystem: simple
+    build-commands:
+      - |
+        cat <<EOF > Makefile
+        SRCDIR     := $(pwd)
+        BUILD_NAME := proton-flatpak
+        include \$(SRCDIR)/build/makefile_base.mak
+        EOF
+      - make fonts
+      - find obj-fonts/ -xtype f \( -name "*.otf" -o -name "*.ttf" \) -ls -exec install
+        -Dm0644 -t ${FLATPAK_DEST}/share/fonts/ {} \;
     sources:
       - *proton_source
-      - type: shell
-        commands:
-          - ./configure.sh --no-steam-runtime
     modules:
       - name: fontforge
         buildsystem: cmake-ninja
