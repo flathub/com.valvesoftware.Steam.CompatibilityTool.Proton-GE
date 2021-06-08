@@ -48,9 +48,9 @@ x-compat-i386-opts: &compat_i386_opts
 
 x-proton-source: &proton_source
   type: archive
-  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.10-GE-1-1/proton-ge-custom-src.tar.xz"
+  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.10-GE-1-2/proton-ge-custom-src.tar.xz"
   strip-components: 0
-  sha256: 515462fc242a3f43062b3033273cd195c998eb77e85507d6e34fa5b4871d5b83
+  sha256: 3e0be4204a759d0757ab95784ce2c5d54218ff145cf5d9c12dfc50e1806f5ec1
 
 cleanup:
   - "*.a"
@@ -864,6 +864,50 @@ modules:
     post-install:
       - ln -sr ${FLATPAK_DEST}/lib{,32}/wine/dxvk/version
     sources: *dxvk_sources
+
+
+  - name: dxvk-nvapi
+    subdir: dxvk-nvapi
+    buildsystem: meson
+    build-options:
+      ldflags: ''
+      ldflags-override: true
+      config-opts:
+        - --cross-file=../build-win64.txt
+        - --cross-file=../meson-ccache-mingw64.txt
+        - --libdir=lib/wine/nvapi
+        - --bindir=lib/wine/nvapi
+      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-Exp/bin
+    config-opts: &dxvk_nvapi_config_opts
+      - --buildtype=release
+      - --strip
+    post-install:
+      - install -Dm644 ../VERSION ${FLATPAK_DEST}/lib/wine/nvapi/version
+    sources: &dxvk_nvapi_sources
+      - *proton_source
+      - type: file
+        dest: dxvk-nvapi
+        path: meson-ccache-mingw32.txt
+      - type: file
+        dest: dxvk-nvapi
+        path: meson-ccache-mingw64.txt
+
+  - name: dxvk-nvapi-32bit
+    subdir: dxvk-nvapi
+    buildsystem: meson
+    build-options:
+      ldflags: ''
+      ldflags-override: true
+      config-opts:
+        - --cross-file=../build-win32.txt
+        - --cross-file=../meson-ccache-mingw32.txt
+        - --libdir=lib32/wine/nvapi
+        - --bindir=lib32/wine/nvapi
+      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-Exp/bin
+    config-opts: *dxvk_nvapi_config_opts
+    post-install:
+      - install -Dm644 ../VERSION ${FLATPAK_DEST}/lib32/wine/nvapi/version
+    sources: *dxvk_nvapi_sources
 
 
   - name: wine-mono-bin
