@@ -52,9 +52,9 @@ x-compat-i386-opts: &compat_i386_opts
 
 x-proton-source: &proton_source
   type: archive
-  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.10-GE-1-2/proton-ge-custom-src.tar.xz"
+  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.10-GE-1-4/proton-ge-custom-src.tar.xz"
   strip-components: 0
-  sha256: 3e0be4204a759d0757ab95784ce2c5d54218ff145cf5d9c12dfc50e1806f5ec1
+  sha256: 5cb5aa1df568729f0c36d3876c59762b3a04dadd4e9b6a9c6cafa954919e99cf
 
 cleanup:
   - "*.a"
@@ -484,6 +484,7 @@ modules:
         commands:
           - autoreconf -fiv
           - tools/make_requests
+          - dlls/winevulkan/make_vulkan --verbose --xml ${PWD}/vk.xml
 
   - name: wine-32bit
     subdir: wine
