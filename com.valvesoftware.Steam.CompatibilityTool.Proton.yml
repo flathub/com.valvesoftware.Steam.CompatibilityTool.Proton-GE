@@ -26,7 +26,7 @@ build-options:
                      :/usr/share/pkgconfig"
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib
     PYTHONPATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/python3.8/site-packages
-  cflags: &optflags -O2 -pipe -march=native -mtune=core-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing
+  cflags: &optflags -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing
   cflags-override: true
   cxxflags: *optflags
   cxxflags-override: true
@@ -45,7 +45,7 @@ x-compat-i386-opts: &compat_i386_opts
                      :/usr/share/pkgconfig"
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
   libdir: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
-  cflags: &optflags32 -O2 -pipe -march=native -mtune=core-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing -mstackrealign
+  cflags: &optflags32 -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing -mstackrealign
   cflags-override: true
   cxxflags: *optflags32
   cxxflags-override: true
