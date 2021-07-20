@@ -10,7 +10,6 @@ sdk-extensions:
   - org.freedesktop.Sdk.Compat.i386
   - org.freedesktop.Sdk.Extension.toolchain-i386
   - org.freedesktop.Sdk.Extension.mingw-w64
-  - org.freedesktop.Sdk.Extension.rust-stable
 
 build-options:
   prefix: /app/share/steam/compatibilitytools.d/Proton-GE
@@ -45,12 +44,16 @@ x-compat-i386-opts: &compat_i386_opts
                      :/usr/share/pkgconfig"
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
   libdir: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
+  cflags: &optflags32 -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing -mstackrealign
+  cflags-override: true
+  cxxflags: *optflags32
+  cxxflags-override: true
 
 x-proton-source: &proton_source
   type: archive
-  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.5-GE-3-1/proton-ge-custom-src.tar.xz"
+  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.12-GE-1-1/proton-ge-custom-src.tar.xz"
   strip-components: 0
-  sha256: 22f797feb3a3ffd4549c01783cdbcf20ee6582eff093b68946b1dff1f5f41f8c
+  sha256: 461dc00b40fdb28c3c8b7d4650adb6bce1c0b8a6a532e79f65b538bb9075271e
 
 cleanup:
   - "*.a"
@@ -162,7 +165,6 @@ modules:
       - -Dlibvisual=disabled
       - -Doverlaycomposition=disabled
       - -Dpango=disabled
-      - -Drawparse=disabled
       - -Dsubparse=disabled
       - -Dtcp=disabled
       - -Dtremor=disabled
@@ -252,6 +254,7 @@ modules:
       - -Dwavenc=disabled
       - -Dximagesrc=disabled
       - -Dy4m=disabled
+      - -Ddoc=disabled
       - -Dexamples=disabled
       - -Dtests=disabled
       - -Dgtk_doc=disabled
@@ -285,6 +288,8 @@ modules:
     config-opts: &gst-plugins-bad-config-opts
       - -Dfbdev=disabled
       - -Ddecklink=disabled
+      - -Dcurl=disabled
+      - -Dcurl-ssh2=disabled
       - -Dlinksys=disabled
       - -Dstatic=disabled
       - -Ddts=disabled
@@ -332,10 +337,6 @@ modules:
     buildsystem: meson
     builddir: true
     config-opts: &gst-plugins-ugly-config-opts
-      - -Dgobject-cast-checks=disabled
-      - -Dglib-asserts=disabled
-      - -Dglib-checks=disabled
-      - -Dglib-checks=disabled
       - -Ddoc=disabled
       - -Dexamples=disabled
       - -Dtests=disabled
@@ -482,6 +483,7 @@ modules:
         commands:
           - autoreconf -fiv
           - tools/make_requests
+          - dlls/winevulkan/make_vulkan --verbose --xml ${PWD}/vk.xml
 
   - name: wine-32bit
     subdir: wine
@@ -502,49 +504,13 @@ modules:
     sources: *wine_sources
 
 
-  - name: media-converter
-    subdir: media-converter
-    build-options:
-      append-path: /usr/lib/sdk/rust-stable/bin
-      env:
-        CARGO_HOME: /run/build/media-converter/media-converter/cargo
-        RUST_TARGET: x86_64-unknown-linux-gnu
-        LIBDIR: lib
-    buildsystem: simple
-    build-commands: &media_converter_build_commands
-      - cargo --offline fetch --manifest-path Cargo.toml
-      - cargo --offline build --target ${RUST_TARGET} --release
-      - install -Dm755 -t ${FLATPAK_DEST}/$LIBDIR/gstreamer-1.0 target/${RUST_TARGET}/release/libprotonmediaconverter.so
-    sources: &media_converter_sources
-      - *proton_source
-      - type: file
-        path: files/media-converter/config.toml
-        dest: media-converter/.cargo
-      - files/media-converter/generated-sources.json
-
-  - name: media-converter-32bit
-    subdir: media-converter
-    build-options:
-      append-path: /usr/lib/sdk/rust-stable/bin
-      arch:
-        x86_64: *compat_i386_opts
-      env:
-        CARGO_HOME: /run/build/media-converter-32bit/media-converter/cargo
-        PKG_CONFIG_ALLOW_CROSS: "1"
-        RUST_TARGET: i686-unknown-linux-gnu
-        LIBDIR: lib32
-    buildsystem: simple
-    build-commands: *media_converter_build_commands
-    sources: *media_converter_sources
-
-
   - name: lsteamclient
     subdir: lsteamclient
     build-options:
       cxxflags: -Wno-attributes
       config-opts:
         - -L${FLATPAK_DEST}/lib
-        - -L${FLATPAK_DEST}/lib/wine
+        - -L${FLATPAK_DEST}/lib/wine/x86_64-unix
     config-opts: &lsteamclient_config_opts
       - --nosource-fix
       - --nolower-include
@@ -561,9 +527,12 @@ modules:
       - .
     make-args:
       - LIBRARIES=-ldl
+    build-commands:
+      - winebuild --dll --fake-module -E lsteamclient.spec -o lsteamclient.dll.fake
     no-make-install: true
     post-install:
-      - install -Dm755 lsteamclient.dll.so -t ${FLATPAK_DEST}/lib/wine/
+      - install -Dm755 lsteamclient.dll.so ${FLATPAK_DEST}/lib/wine/x86_64-unix/lsteamclient.dll.so
+      - install -Dm755 lsteamclient.dll.fake ${FLATPAK_DEST}/lib/wine/x86_64-windows/lsteamclient.dll
     sources: &lsteamclient_sources
       - *proton_source
       - type: file
@@ -581,7 +550,7 @@ modules:
       cxxflags: -Wno-attributes
       config-opts:
         - -L${FLATPAK_DEST}/lib32
-        - -L${FLATPAK_DEST}/lib32/wine
+        - -L${FLATPAK_DEST}/lib32/wine/i386-unix
         - --wine32
       make-args: &winemaker_m32_make_args
         - CC=winegcc -m32
@@ -589,9 +558,12 @@ modules:
     config-opts: *lsteamclient_config_opts
     make-args:
       - LIBRARIES=-ldl
+    build-commands:
+      - winebuild --dll --fake-module -E lsteamclient.spec -o lsteamclient.dll.fake
     no-make-install: true
     post-install:
-      - install -Dm755 lsteamclient.dll.so -t ${FLATPAK_DEST}/lib32/wine/
+      - install -Dm755 lsteamclient.dll.so ${FLATPAK_DEST}/lib32/wine/i386-unix/lsteamclient.dll.so
+      - install -Dm755 lsteamclient.dll.fake ${FLATPAK_DEST}/lib32/wine/i386-windows/lsteamclient.dll
     sources: *lsteamclient_sources
 
 
@@ -628,16 +600,19 @@ modules:
       - -I../wine/include
       - -I../openvr/headers
       - -L${FLATPAK_DEST}/lib32
-      - -L${FLATPAK_DEST}/lib32/wine
+      - -L${FLATPAK_DEST}/lib32/wine/i386-unix
       - -lsteam_api
       - -lole32
       - -ldl
       - --guiexe
       - .
     make-args: *winemaker_m32_make_args
+    build-commands:
+      - winebuild --exe --fake-module -F steam -o steam.exe.fake
     no-make-install: true
     post-install:
-      - install -Dm755 steam_helper.exe.so ${FLATPAK_DEST}/lib32/wine/steam.exe.so
+      - install -Dm755 steam_helper.exe.so ${FLATPAK_DEST}/lib32/wine/i386-unix/steam.exe.so
+      - install -Dm755 steam.exe.fake ${FLATPAK_DEST}/lib32/wine/i386-windows/steam.exe
     sources:
       - *proton_source
       - type: file
@@ -680,8 +655,8 @@ modules:
       - winebuild --dll --fake-module -E vrclient_x64.spec -o vrclient_x64.dll.fake
     no-make-install: true
     post-install:
-      - install -Dm755 vrclient_x64.dll.so ${FLATPAK_DEST}/lib/wine/vrclient_x64.dll.so
-      - install -Dm755 vrclient_x64.dll.fake ${FLATPAK_DEST}/lib/wine/fakedlls/vrclient_x64.dll
+      - install -Dm755 vrclient_x64.dll.so ${FLATPAK_DEST}/lib/wine/x86_64-unix/vrclient_x64.dll.so
+      - install -Dm755 vrclient_x64.dll.fake ${FLATPAK_DEST}/lib/wine/x86_64-windows/vrclient_x64.dll
     sources: &vrclient_sources
       - *proton_source
       - type: file
@@ -708,8 +683,8 @@ modules:
       - winebuild --dll --fake-module -E vrclient_x64.spec -o vrclient_x64.dll.fake
     no-make-install: true
     post-install:
-      - install -Dm755 vrclient_x64.dll.so ${FLATPAK_DEST}/lib32/wine/vrclient.dll.so
-      - install -Dm755 vrclient_x64.dll.fake ${FLATPAK_DEST}/lib32/wine/fakedlls/vrclient.dll
+      - install -Dm755 vrclient_x64.dll.so ${FLATPAK_DEST}/lib32/wine/i386-unix/vrclient.dll.so
+      - install -Dm755 vrclient_x64.dll.fake ${FLATPAK_DEST}/lib32/wine/i386-windows/vrclient.dll
     sources: *vrclient_sources
 
 
@@ -737,8 +712,8 @@ modules:
       - winebuild --dll --fake-module -E wineopenxr.spec -o wineopenxr.dll.fake
     no-make-install: true
     post-install:
-      - install -Dm755 wineopenxr.dll.so -t ${FLATPAK_DEST}/lib/wine/
-      - install -Dm755 wineopenxr.dll.fake ${FLATPAK_DEST}/lib/wine/fakedlls/wineopenxr.dll
+      - install -Dm755 wineopenxr.dll.so -t ${FLATPAK_DEST}/lib/wine/x86_64-unix/
+      - install -Dm755 wineopenxr.dll.fake ${FLATPAK_DEST}/lib/wine/x86_64-windows/wineopenxr.dll
     sources: &wineopenxr_sources
       - *proton_source
       - type: file
@@ -866,15 +841,59 @@ modules:
     sources: *dxvk_sources
 
 
+  - name: dxvk-nvapi
+    subdir: dxvk-nvapi
+    buildsystem: meson
+    build-options:
+      ldflags: ''
+      ldflags-override: true
+      config-opts:
+        - --cross-file=../build-win64.txt
+        - --cross-file=../meson-ccache-mingw64.txt
+        - --libdir=lib/wine/nvapi
+        - --bindir=lib/wine/nvapi
+      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-Exp/bin
+    config-opts: &dxvk_nvapi_config_opts
+      - --buildtype=release
+      - --strip
+    post-install:
+      - install -Dm644 ../VERSION ${FLATPAK_DEST}/lib/wine/nvapi/version
+    sources: &dxvk_nvapi_sources
+      - *proton_source
+      - type: file
+        dest: dxvk-nvapi
+        path: meson-ccache-mingw32.txt
+      - type: file
+        dest: dxvk-nvapi
+        path: meson-ccache-mingw64.txt
+
+  - name: dxvk-nvapi-32bit
+    subdir: dxvk-nvapi
+    buildsystem: meson
+    build-options:
+      ldflags: ''
+      ldflags-override: true
+      config-opts:
+        - --cross-file=../build-win32.txt
+        - --cross-file=../meson-ccache-mingw32.txt
+        - --libdir=lib32/wine/nvapi
+        - --bindir=lib32/wine/nvapi
+      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-Exp/bin
+    config-opts: *dxvk_nvapi_config_opts
+    post-install:
+      - install -Dm644 ../VERSION ${FLATPAK_DEST}/lib32/wine/nvapi/version
+    sources: *dxvk_nvapi_sources
+
+
   - name: wine-mono-bin
     buildsystem: simple
     build-commands:
       - mkdir -p ${FLATPAK_DEST}/share/wine/mono
-      - cp -a . ${FLATPAK_DEST}/share/wine/mono/wine-mono-6.1.1
+      - cp -a . ${FLATPAK_DEST}/share/wine/mono/wine-mono-6.2.0
     sources:
       - type: archive
-        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-6.1.1/wine-mono-6.1.1-x86.tar.xz
-        sha256: c3bab46c3e69ecdda61532c28c6a94a78aef9c750cc18dbb60151e0697714d6d
+        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-6.2.0/wine-mono-6.2.0-x86.tar.xz
+        sha256: f15d6a646b0bf141bd1b826dd4a273bbb6f8f1d592a2b65192281223e986ee15
 
 
   - name: wine-gecko-bin
@@ -895,19 +914,19 @@ modules:
 
 
   - name: fonts
-    buildsystem: autotools
-    no-autogen: true
-    make-args:
-      - fonts
-    no-make-install: true
-    no-parallel-make: true
-    post-install:
-      - find obj-fonts/ -xtype f \( -name "*.otf" -o -name "*.ttf" \) -ls -exec install -Dm0644 -t ${FLATPAK_DEST}/share/fonts/ {} \;
+    buildsystem: simple
+    build-commands:
+      - |
+        cat <<EOF > Makefile
+        SRCDIR     := $(pwd)
+        BUILD_NAME := proton-flatpak
+        include \$(SRCDIR)/build/makefile_base.mak
+        EOF
+      - make fonts
+      - find obj-fonts/ -xtype f \( -name "*.otf" -o -name "*.ttf" \) -ls -exec install
+        -Dm0644 -t ${FLATPAK_DEST}/share/fonts/ {} \;
     sources:
       - *proton_source
-      - type: shell
-        commands:
-          - ./configure.sh --no-steam-runtime
     modules:
       - name: fontforge
         buildsystem: cmake-ninja
