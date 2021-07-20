@@ -1,3 +1,0 @@
-[target.i686-unknown-linux-gnu]
-linker = "i686-unknown-linux-gnu-gcc"
-ar = "i686-unknown-linux-gnu-ar"
