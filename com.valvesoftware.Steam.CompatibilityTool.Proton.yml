@@ -852,7 +852,7 @@ modules:
         - --cross-file=../meson-ccache-mingw64.txt
         - --libdir=lib/wine/nvapi
         - --bindir=lib/wine/nvapi
-      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-Exp/bin
+      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-GE/bin
     config-opts: &dxvk_nvapi_config_opts
       - --buildtype=release
       - --strip
@@ -878,7 +878,7 @@ modules:
         - --cross-file=../meson-ccache-mingw32.txt
         - --libdir=lib32/wine/nvapi
         - --bindir=lib32/wine/nvapi
-      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-Exp/bin
+      prepend-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-GE/bin
     config-opts: *dxvk_nvapi_config_opts
     post-install:
       - install -Dm644 ../VERSION ${FLATPAK_DEST}/lib32/wine/nvapi/version
