@@ -18,14 +18,11 @@ build-options:
   env:
     C_INCLUDE_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/include:/app/include
     CPLUS_INCLUDE_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/include:/app/include
-    PKG_CONFIG_PATH: "/app/share/steam/compatibilitytools.d/Proton-GE/lib/pkgconfig\
-                     :/app/lib/pkgconfig\
-                     :/app/share/pkgconfig\
-                     :/usr/lib/x86_64-linux-gnu/pkgconfig\
-                     :/usr/share/pkgconfig"
+    PKG_CONFIG_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/pkgconfig:/app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib
     PYTHONPATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/python3.8/site-packages
-  cflags: &optflags -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing
+  cflags: &optflags -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv
+    -fno-strict-aliasing
   cflags-override: true
   cxxflags: *optflags
   cxxflags-override: true
@@ -37,23 +34,20 @@ x-compat-i386-opts: &compat_i386_opts
   env:
     CC: ccache i686-unknown-linux-gnu-gcc
     CXX: ccache i686-unknown-linux-gnu-g++
-    PKG_CONFIG_PATH: "/app/share/steam/compatibilitytools.d/Proton-GE/lib32/pkgconfig\
-                     :/app/lib32/pkgconfig\
-                     :/app/share/pkgconfig\
-                     :/usr/lib/i386-linux-gnu/pkgconfig\
-                     :/usr/share/pkgconfig"
+    PKG_CONFIG_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/pkgconfig:/app/lib32/pkgconfig:/app/share/pkgconfig:/usr/lib/i386-linux-gnu/pkgconfig:/usr/share/pkgconfig
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
   libdir: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
-  cflags: &optflags32 -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing -mstackrealign
+  cflags: &optflags32 -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv
+    -fno-strict-aliasing -mstackrealign
   cflags-override: true
   cxxflags: *optflags32
   cxxflags-override: true
 
 x-proton-source: &proton_source
   type: archive
-  url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.15-GE-1-1/proton-ge-custom-src.tar.xz"
+  url: https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.15-GE-2-1/proton-ge-custom-src.tar.xz
   strip-components: 0
-  sha256: d5c7dbaa43c4289d2f67c04a022e5a093e865dda049d175e81ee781a5e43d055
+  sha256: f10215be6be81feb4a307d0112715520c98a47a6c7de07ed9189d4d419553286
   x-checker-data:
     type: json
     url: https://api.github.com/repos/lctrs/proton-ge-custom-tarball-maker/releases/latest
@@ -61,8 +55,8 @@ x-proton-source: &proton_source
     url-query: .assets[] | select(.name=="proton-ge-custom-src.tar.xz") | .browser_download_url
 
 cleanup:
-  - "*.a"
-  - "*.la"
+  - '*.a'
+  - '*.la'
   - /include
   - /lib/pkgconfig
   - /lib32/pkgconfig
@@ -136,7 +130,7 @@ modules:
       - -Dnls=disabled
       - -Dbenchmarks=disabled
     sources:
-     - *proton_source
+      - *proton_source
 
   - name: gstreamer-32bit
     subdir: gstreamer
@@ -699,7 +693,7 @@ modules:
       config-opts:
         - -L${FLATPAK_DEST}/lib
         - -L${FLATPAK_DEST}/lib/wine
-    config-opts: &wineopenxr_config_opts
+    config-opts:
       - --nosource-fix
       - --nolower-include
       - --nodlls
@@ -719,7 +713,7 @@ modules:
     post-install:
       - install -Dm755 wineopenxr.dll.so -t ${FLATPAK_DEST}/lib/wine/x86_64-unix/
       - install -Dm755 wineopenxr.dll.fake ${FLATPAK_DEST}/lib/wine/x86_64-windows/wineopenxr.dll
-    sources: &wineopenxr_sources
+    sources:
       - *proton_source
       - type: file
         path: winemaker-configure.sh
@@ -737,7 +731,7 @@ modules:
   - name: glslang
     buildsystem: cmake-ninja
     cleanup:
-      - "*"
+      - '*'
     sources:
       - type: archive
         url: https://github.com/KhronosGroup/glslang/archive/refs/tags/11.2.0.tar.gz
@@ -748,7 +742,7 @@ modules:
     subdir: vkd3d-proton
     buildsystem: meson
     build-options:
-      ldflags: &mingw-ldflags ""
+      ldflags: &mingw-ldflags ''
       ldflags-override: true
       config-opts:
         - --cross-file=../build-win64.txt
@@ -798,7 +792,7 @@ modules:
   - name: dxvk
     subdir: dxvk
     buildsystem: meson
-    build-options: &dxvk_64_build_options
+    build-options:
       ldflags: *mingw-ldflags
       ldflags-override: true
       config-opts:
@@ -831,7 +825,7 @@ modules:
   - name: dxvk-32bit
     subdir: dxvk
     buildsystem: meson
-    build-options: &dxvk_32_build_options
+    build-options:
       ldflags: *mingw-ldflags
       ldflags-override: true
       config-opts:
@@ -953,10 +947,10 @@ modules:
           - -DENABLE_WOFF2=OFF
           - -DENABLE_DOCS=OFF
         cleanup:
-          - "*"
+          - '*'
         sources:
           - type: archive
-            url: "https://github.com/fontforge/fontforge/releases/download/20201107/fontforge-20201107.tar.xz"
+            url: https://github.com/fontforge/fontforge/releases/download/20201107/fontforge-20201107.tar.xz
             sha256: 68bcba8f602819eddc29cd356ee13fafbad7a80d19b652d354c6791343476c78
       - files/afdko/python3-requirements-dev.json
       - files/afdko/python3-requirements.json
@@ -991,13 +985,8 @@ modules:
   - name: proton
     buildsystem: simple
     build-commands:
-      - install -Dm755 -t ${FLATPAK_DEST}/
-          proton
-          filelock.py
-          user_settings.sample.py
-      - install -Dm644 -t ${FLATPAK_DEST}/
-          compatibilitytool.vdf
-          proton_3.7_tracked_files
+      - install -Dm755 -t ${FLATPAK_DEST}/ proton filelock.py user_settings.sample.py
+      - install -Dm644 -t ${FLATPAK_DEST}/ compatibilitytool.vdf proton_3.7_tracked_files
       - install -Dm644 toolmanifest_noruntime.vdf ${FLATPAK_DEST}/toolmanifest.vdf
       - install -Dm644 dist.LICENSE ${FLATPAK_DEST}/LICENSE
       - |
@@ -1018,7 +1007,8 @@ modules:
         ln -s ../share dist/share
         ln -s ../version dist/version
       - install -Dm644 -t ${FLATPAK_DEST}/share/metainfo ${FLATPAK_ID}.metainfo.xml
-      - appstream-compose --basename=${FLATPAK_ID} --prefix=${FLATPAK_DEST} --origin=flatpak ${FLATPAK_ID}
+      - appstream-compose --basename=${FLATPAK_ID} --prefix=${FLATPAK_DEST} --origin=flatpak
+        ${FLATPAK_ID}
     sources:
       - *proton_source
       - type: patch
