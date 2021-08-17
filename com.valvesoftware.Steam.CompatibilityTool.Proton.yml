@@ -943,8 +943,7 @@ modules:
           - type: archive
             url: https://github.com/fontforge/fontforge/releases/download/20201107/fontforge-20201107.tar.xz
             sha256: 68bcba8f602819eddc29cd356ee13fafbad7a80d19b652d354c6791343476c78
-      - files/afdko/python3-requirements-dev.json
-      - files/afdko/python3-requirements.json
+      - files/afdko/afdko.json
 
 
   - name: protonfixes
