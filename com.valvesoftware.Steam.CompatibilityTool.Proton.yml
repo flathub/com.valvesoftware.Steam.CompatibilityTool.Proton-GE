@@ -54,6 +54,11 @@ x-proton-source: &proton_source
   url: "https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.15-GE-1-1/proton-ge-custom-src.tar.xz"
   strip-components: 0
   sha256: d5c7dbaa43c4289d2f67c04a022e5a093e865dda049d175e81ee781a5e43d055
+  x-checker-data:
+    type: json
+    url: https://api.github.com/repos/lctrs/proton-ge-custom-tarball-maker/releases/latest
+    version-query: .tag_name
+    url-query: .assets[] | select(.name=="proton-ge-custom-src.tar.xz") | .browser_download_url
 
 cleanup:
   - "*.a"
@@ -998,17 +1003,12 @@ modules:
       - |
         set -e -o pipefail
         PROTON_VERSION=$(cat VERSION)
-        PROTON_DATE=$(cat DATE)
         TIMESTAMP=$(date +%s)
         echo ${TIMESTAMP} proton_flatpak-${PROTON_VERSION} > ${FLATPAK_DEST}/version
         sed \
           -e "s/@VERSION@/${PROTON_VERSION}/g" \
           -e "s/@BUILD@/${TIMESTAMP}/g" \
           -i ${FLATPAK_DEST}/compatibilitytool.vdf
-        sed \
-          -e "s/@VERSION@/${PROTON_VERSION}/g" \
-          -e "s/@DATE@/${PROTON_DATE}/g" \
-          -i ${FLATPAK_ID}.metainfo.xml
       - |
         cd ${FLATPAK_DEST}
         mkdir dist
