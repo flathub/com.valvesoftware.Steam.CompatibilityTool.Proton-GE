@@ -43,16 +43,7 @@ x-compat-i386-opts: &compat_i386_opts
   cxxflags: *optflags32
   cxxflags-override: true
 
-x-proton-source: &proton_source
-  type: archive
-  url: https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/6.15-GE-2-1/proton-ge-custom-src.tar.xz
-  strip-components: 0
-  sha256: f10215be6be81feb4a307d0112715520c98a47a6c7de07ed9189d4d419553286
-  x-checker-data:
-    type: json
-    url: https://api.github.com/repos/lctrs/proton-ge-custom-tarball-maker/releases/latest
-    version-query: .tag_name
-    url-query: .assets[] | select(.name=="proton-ge-custom-src.tar.xz") | .browser_download_url
+x-proton-source: &proton_source files/proton/source.yaml
 
 cleanup:
   - '*.a'
