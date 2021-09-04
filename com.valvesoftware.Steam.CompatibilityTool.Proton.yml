@@ -715,6 +715,9 @@ modules:
       - name: openxr
         subdir: OpenXR-SDK
         buildsystem: cmake-ninja
+        config-opts:
+          # FIXME: Make a proper patch instead to build with std::filesystem
+          - -DBUILD_WITH_STD_FILESYSTEM=OFF
         sources:
           - *proton_source
 
