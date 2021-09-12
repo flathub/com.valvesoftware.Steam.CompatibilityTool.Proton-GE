@@ -7,3 +7,4 @@ x-checker-data:
   url: https://api.github.com/repos/lctrs/proton-ge-custom-tarball-maker/releases/latest
   version-query: .tag_name
   url-query: .assets[] | select(.name=="proton-ge-custom-src.tar.xz") | .browser_download_url
+  is-main-source: true
