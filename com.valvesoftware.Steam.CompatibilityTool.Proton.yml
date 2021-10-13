@@ -441,6 +441,20 @@ modules:
       - *proton_source
 
 
+  - name: Vulkan-Headers
+    subdir: Vulkan-Headers
+    buildsystem: cmake-ninja
+    sources:
+      - *proton_source
+
+
+  - name: SPIRV-Headers
+    subdir: SPIRV-Headers
+    buildsystem: cmake-ninja
+    sources:
+      - *proton_source
+
+
   - name: wine
     subdir: wine
     build-options:
