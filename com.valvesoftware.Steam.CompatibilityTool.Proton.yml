@@ -441,6 +441,20 @@ modules:
       - *proton_source
 
 
+  - name: Vulkan-Headers
+    subdir: Vulkan-Headers
+    buildsystem: cmake-ninja
+    sources:
+      - *proton_source
+
+
+  - name: SPIRV-Headers
+    subdir: SPIRV-Headers
+    buildsystem: cmake-ninja
+    sources:
+      - *proton_source
+
+
   - name: wine
     subdir: wine
     build-options:
@@ -732,6 +746,32 @@ modules:
         sha256: 8ff2fcf9b054e4a4ef56fcd8a637322f827b2b176a592a618d63672ddb896e06
 
 
+  - name: vkd3d
+    subdir: vkd3d
+    build-options:
+      ldflags: >-
+        -L/usr/lib/sdk/mingw-w64/x86_64-w64-mingw32/lib
+        -L/app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-windows
+      ldflags-override: true
+      config-opts:
+        - --host=x86_64-w64-mingw32
+      env:
+        CC: ccache x86_64-w64-mingw32-gcc
+        LD: x86_64-w64-mingw32-ld
+      prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib/vkd3d/prefix
+    config-opts: &vkd3d-config-opts
+      - --disable-doxygen-doc
+      - --disable-tests
+      - --disable-demos
+      - --without-ncurses
+    post-install:
+      - mv -v ${FLATPAK_DEST}/lib/vkd3d/{prefix/bin/,}libvkd3d-shader-1.dll
+    sources: &vkd3d-sources
+      - *proton_source
+    cleanup:
+      - /lib/vkd3d/prefix
+
+
   - name: vkd3d-proton
     subdir: vkd3d-proton
     buildsystem: meson
@@ -882,11 +922,11 @@ modules:
     buildsystem: simple
     build-commands:
       - mkdir -p ${FLATPAK_DEST}/share/wine/mono
-      - cp -a . ${FLATPAK_DEST}/share/wine/mono/wine-mono-6.4.0
+      - cp -a . ${FLATPAK_DEST}/share/wine/mono/wine-mono-6.4.1
     sources:
       - type: archive
-        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-6.4.0/wine-mono-6.4.0-x86.tar.xz
-        sha256: 0473570207938f983994addb1ff3c3904a30f6cc07ecaa291c7900f5f7e4cc21
+        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-6.4.1/wine-mono-6.4.1-x86.tar.xz
+        sha256: a70c865e590058fa6fc3aa47425646405bdda27f78b9aa6d2030d2d2a8efadbb
 
 
   - name: wine-gecko-bin
