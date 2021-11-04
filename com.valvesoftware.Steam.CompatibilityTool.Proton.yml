@@ -772,6 +772,27 @@ modules:
       - /lib/vkd3d/prefix
 
 
+  - name: vkd3d-32bit
+    subdir: vkd3d
+    build-options:
+      ldflags: >-
+        -L/usr/lib/sdk/mingw-w64/i686-w64-mingw32/lib
+        -L/app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-windows
+      ldflags-override: true
+      config-opts:
+        - --host=i686-w64-mingw32
+      env:
+        CC: ccache i686-w64-mingw32-gcc
+        LD: i686-w64-mingw32-ld
+      prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/vkd3d/prefix
+    config-opts: *vkd3d-config-opts
+    post-install:
+      - mv -v ${FLATPAK_DEST}/lib32/vkd3d/{prefix/bin/,}libvkd3d-shader-1.dll
+    sources: *vkd3d-sources
+    cleanup:
+      - /lib32/vkd3d/prefix
+
+
   - name: vkd3d-proton
     subdir: vkd3d-proton
     buildsystem: meson
