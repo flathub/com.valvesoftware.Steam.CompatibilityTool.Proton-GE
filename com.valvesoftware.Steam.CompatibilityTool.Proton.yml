@@ -946,11 +946,12 @@ modules:
     buildsystem: simple
     build-commands:
       - mkdir -p ${FLATPAK_DEST}/share/wine/mono
-      - cp -a . ${FLATPAK_DEST}/share/wine/mono/wine-mono-6.4.1
+      - cp -a wine-mono-*/ ${FLATPAK_DEST}/share/wine/mono/
     sources:
       - type: archive
         url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-6.4.1/wine-mono-6.4.1-x86.tar.xz
         sha256: a70c865e590058fa6fc3aa47425646405bdda27f78b9aa6d2030d2d2a8efadbb
+        strip-components: 0
 
 
   - name: wine-gecko-bin
