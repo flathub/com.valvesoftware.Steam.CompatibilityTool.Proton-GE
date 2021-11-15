@@ -585,13 +585,13 @@ modules:
       - *proton_source
 
 
-  - name: steam_helper-32bit
+  - name: steam_helper
     subdir: steam_helper
     build-options:
       config-opts:
         - -L${FLATPAK_DEST}/lib
         - -L${FLATPAK_DEST}/lib/wine/x86_64-windows
-    config-opts:
+    config-opts: &steam_helper-config-opts
       - --nosource-fix
       - --nolower-include
       - --nodlls
