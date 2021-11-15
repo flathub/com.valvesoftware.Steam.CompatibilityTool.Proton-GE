@@ -571,7 +571,7 @@ modules:
     sources: *lsteamclient_sources
 
 
-  - name: libsteam_api-bin-32bit
+  - name: libsteam_api-bin
     #WARNING proprietary
     build-options:
       strip: false
@@ -579,10 +579,46 @@ modules:
     subdir: steam_helper
     buildsystem: simple
     build-commands:
-      - install -Dm755 libsteam_api.so -t ${FLATPAK_DEST}/lib32/
+      - install -Dm755 64/libsteam_api.so -t ${FLATPAK_DEST}/lib/
+      - install -Dm755 32/libsteam_api.so -t ${FLATPAK_DEST}/lib32/
     sources:
       - *proton_source
 
+
+  - name: steam_helper
+    subdir: steam_helper
+    build-options:
+      config-opts:
+        - -L${FLATPAK_DEST}/lib
+        - -L${FLATPAK_DEST}/lib/wine/x86_64-unix
+    config-opts: &steam_helper-config-opts
+      - --nosource-fix
+      - --nolower-include
+      - --nodlls
+      - --nomsvcrt
+      - -I${FLATPAK_DEST}/include
+      - -I${FLATPAK_DEST}/include/wine
+      - -I${FLATPAK_DEST}/include/wine/windows
+      - -I../lsteamclient/steamworks_sdk_142
+      - -I../wine/include
+      - -I../openvr/headers
+      - -lsteam_api
+      - -lole32
+      - -ldl
+      - --guiexe
+      - .
+    build-commands: &steam_helper-build-commands
+      - winebuild --exe --fake-module -F steam -o steam.exe.fake
+    no-make-install: true
+    post-install:
+      - install -Dm755 steam_helper.exe.so ${FLATPAK_DEST}/lib/wine/x86_64-unix/steam.exe.so
+      - install -Dm755 steam.exe.fake ${FLATPAK_DEST}/lib/wine/x86_64-windows/steam.exe
+    sources: &steam_helper-sources
+      - *proton_source
+      - type: file
+        path: winemaker-configure.sh
+        dest: steam_helper
+        dest-filename: configure
 
   - name: steam_helper-32bit
     subdir: steam_helper
@@ -591,38 +627,18 @@ modules:
     build-options:
       arch:
         x86_64: *compat_i386_opts
-    config-opts:
-      - --nosource-fix
-      - --nolower-include
-      - --nodlls
-      - --nomsvcrt
-      - --wine32
-      - -I${FLATPAK_DEST}/include
-      - -I${FLATPAK_DEST}/include/wine
-      - -I${FLATPAK_DEST}/include/wine/windows
-      - -I../lsteamclient/steamworks_sdk_142
-      - -I../wine/include
-      - -I../openvr/headers
-      - -L${FLATPAK_DEST}/lib32
-      - -L${FLATPAK_DEST}/lib32/wine/i386-unix
-      - -lsteam_api
-      - -lole32
-      - -ldl
-      - --guiexe
-      - .
-    make-args: *winemaker_m32_make_args
-    build-commands:
-      - winebuild --exe --fake-module -F steam -o steam.exe.fake
+      config-opts:
+        - -L${FLATPAK_DEST}/lib32
+        - -L${FLATPAK_DEST}/lib32/wine/i386-unix
+        - --wine32
+      make-args: *winemaker_m32_make_args
+    config-opts: *steam_helper-config-opts
+    build-commands: *steam_helper-build-commands
     no-make-install: true
     post-install:
       - install -Dm755 steam_helper.exe.so ${FLATPAK_DEST}/lib32/wine/i386-unix/steam.exe.so
       - install -Dm755 steam.exe.fake ${FLATPAK_DEST}/lib32/wine/i386-windows/steam.exe
-    sources:
-      - *proton_source
-      - type: file
-        path: winemaker-configure.sh
-        dest: steam_helper
-        dest-filename: configure
+    sources: *steam_helper-sources
 
 
   - name: openvr
@@ -946,11 +962,12 @@ modules:
     buildsystem: simple
     build-commands:
       - mkdir -p ${FLATPAK_DEST}/share/wine/mono
-      - cp -a . ${FLATPAK_DEST}/share/wine/mono/wine-mono-6.4.1
+      - cp -a wine-mono-*/ ${FLATPAK_DEST}/share/wine/mono/
     sources:
       - type: archive
         url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-6.4.1/wine-mono-6.4.1-x86.tar.xz
         sha256: a70c865e590058fa6fc3aa47425646405bdda27f78b9aa6d2030d2d2a8efadbb
+        strip-components: 0
 
 
   - name: wine-gecko-bin
