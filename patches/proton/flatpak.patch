@@ -1,8 +1,8 @@
 diff --git a/proton b/proton
-index 09b9fd2..744fcc8 100755
+index e9f04609..7cf06d14 100755
 --- a/proton
 +++ b/proton
-@@ -246,66 +246,22 @@ def set_dir_casefold_bit(dir_path):
+@@ -280,67 +280,23 @@ def set_dir_casefold_bit(dir_path):
  class Proton:
      def __init__(self, base_dir):
          self.base_dir = base_dir + "/"
@@ -12,12 +12,14 @@ index 09b9fd2..744fcc8 100755
 -        self.lib64_dir = self.path("files/lib64/")
 -        self.fonts_dir = self.path("files/share/fonts/")
 -        self.wine_fonts_dir = self.path("files/share/wine/fonts/")
+-        self.wine_inf = self.path("files/share/wine/wine.inf")
 +        self.dist_dir = self.base_dir
 +        self.bin_dir = self.path("bin/")
 +        self.lib_dir = self.path("lib32/")
 +        self.lib64_dir = self.path("lib/")
 +        self.fonts_dir = self.path("share/fonts/")
 +        self.wine_fonts_dir = self.path("share/wine/fonts/")
++        self.wine_inf = self.path("share/wine/wine.inf")
          self.version_file = self.path("version")
 -        self.default_pfx_dir = self.path("files/share/default_pfx/")
 +        self.default_pfx_dir = self.path("share/default_pfx/")
@@ -76,7 +78,7 @@ index 09b9fd2..744fcc8 100755
  class CompatData:
      def __init__(self, compatdata):
          self.base_dir = compatdata + "/"
-@@ -1290,9 +1246,6 @@ if __name__ == "__main__":
+@@ -1506,9 +1462,6 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -86,7 +88,7 @@ index 09b9fd2..744fcc8 100755
      g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
  
      g_session = Session()
-@@ -1303,9 +1256,6 @@ if __name__ == "__main__":
+@@ -1519,9 +1472,6 @@ if __name__ == "__main__":
  
      g_session.init_wine()
  
@@ -94,5 +96,5 @@ index 09b9fd2..744fcc8 100755
 -        g_proton.make_default_prefix()
 -
      import protonfixes
-     
-     g_session.init_session()
+ 
+     g_session.init_session(sys.argv[1] != "runinprefix")
