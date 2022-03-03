@@ -8,6 +8,7 @@
   <project_license>BSD-3-Clause and LGPL-2.1 and zlib-acknowledgement and Zlib and OFL-1.1 and MIT and MPL-2.0 and LicenseRef-proprietary</project_license>
   <metadata_license>CC0-1.0</metadata_license>
   <releases>
+    <release version="GE-Proton7-5-1" date="2022-03-03"/>
     <release version="7.2-GE-2-1" date="2022-02-15"/>
     <release version="7.1-GE-2-1" date="2022-01-31"/>
     <release version="7.0rc6-GE-1-1" date="2022-01-16"/>
