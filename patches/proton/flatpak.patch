@@ -1,8 +1,8 @@
 diff --git a/proton b/proton
-index e9f04609..7cf06d14 100755
+index 3d938a81..0bdf8731 100755
 --- a/proton
 +++ b/proton
-@@ -280,67 +280,23 @@ def set_dir_casefold_bit(dir_path):
+@@ -332,67 +332,23 @@ def set_dir_casefold_bit(dir_path):
  class Proton:
      def __init__(self, base_dir):
          self.base_dir = base_dir + "/"
@@ -34,21 +34,21 @@ index e9f04609..7cf06d14 100755
  
 -    def cleanup_legacy_dist(self):
 -        old_dist_dir = self.path("dist/")
--        if os.path.exists(old_dist_dir):
+-        if file_exists(old_dist_dir, follow_symlinks=True):
 -            with self.dist_lock:
--                if os.path.exists(old_dist_dir):
+-                if file_exists(old_dist_dir, follow_symlinks=True):
 -                    shutil.rmtree(old_dist_dir)
 -
 -    def do_steampipe_fixups(self):
 -        fixups_json = self.path("steampipe_fixups.json")
 -        fixups_mtime = self.path("files/steampipe_fixups_mtime")
 -
--        if os.path.exists(fixups_json):
+-        if file_exists(fixups_json, follow_symlinks=True):
 -            with self.dist_lock:
 -                import steampipe_fixups
 -
 -                current_fixup_mtime = None
--                if os.path.exists(fixups_mtime):
+-                if file_exists(fixups_mtime, follow_symlinks=True):
 -                    with open(fixups_mtime, "r") as f:
 -                        current_fixup_mtime = f.readline().strip()
 -
@@ -72,13 +72,13 @@ index e9f04609..7cf06d14 100755
 -                #make default prefix
 -                local_env["WINEPREFIX"] = self.default_pfx_dir
 -                local_env["WINEDEBUG"] = "-all"
--                g_session.run_proc([self.wine64_bin, "wineboot"], local_env)
+-                g_session.run_proc([self.wine_bin, "wineboot"], local_env)
 -                g_session.run_proc([self.wineserver_bin, "-w"], local_env)
 -
  class CompatData:
      def __init__(self, compatdata):
          self.base_dir = compatdata + "/"
-@@ -1506,9 +1462,6 @@ if __name__ == "__main__":
+@@ -1538,18 +1494,12 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -88,7 +88,6 @@ index e9f04609..7cf06d14 100755
      g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
  
      g_session = Session()
-@@ -1519,9 +1472,6 @@ if __name__ == "__main__":
  
      g_session.init_wine()
  

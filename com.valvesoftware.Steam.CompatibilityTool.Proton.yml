@@ -21,10 +21,10 @@ build-options:
     PKG_CONFIG_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/pkgconfig:/app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib
     PYTHONPATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/python3.9/site-packages
-    FLATPAK_LIBDIR: /app/share/steam/compatibilitytools.d/Proton/lib
-    FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton/lib/wine
-    FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton/lib/wine/x86_64-unix
-    FLATPAK_LIBDIR_WINE_PE: /app/share/steam/compatibilitytools.d/Proton/lib/wine/x86_64-windows
+    FLATPAK_LIBDIR: /app/share/steam/compatibilitytools.d/Proton-GE/lib
+    FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine
+    FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-unix
+    FLATPAK_LIBDIR_WINE_PE: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-windows
   cflags: &optflags -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv
     -fno-strict-aliasing
   cflags-override: true
@@ -40,10 +40,10 @@ x-compat-i386-opts: &compat_i386_opts
     CXX: ccache i686-unknown-linux-gnu-g++
     PKG_CONFIG_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/pkgconfig:/app/lib32/pkgconfig:/app/share/pkgconfig:/usr/lib/i386-linux-gnu/pkgconfig:/usr/share/pkgconfig
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
-    FLATPAK_LIBDIR: /app/share/steam/compatibilitytools.d/Proton/lib32
-    FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton/lib32/wine
-    FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton/lib32/wine/i386-unix
-    FLATPAK_LIBDIR_WINE_PE: &lib32_wine_pe /app/share/steam/compatibilitytools.d/Proton/lib32/wine/i386-windows
+    FLATPAK_LIBDIR: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
+    FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine
+    FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-unix
+    FLATPAK_LIBDIR_WINE_PE: &lib32_wine_pe /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-windows
   libdir: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
   cflags: &optflags32 -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv
     -fno-strict-aliasing -mstackrealign
