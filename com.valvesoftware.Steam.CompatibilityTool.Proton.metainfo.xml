@@ -8,18 +8,6 @@
   <project_license>BSD-3-Clause and LGPL-2.1 and zlib-acknowledgement and Zlib and OFL-1.1 and MIT and MPL-2.0 and LicenseRef-proprietary</project_license>
   <metadata_license>CC0-1.0</metadata_license>
   <releases>
-    <release version="7.2-GE-2-1" date="2022-02-15"/>
-    <release version="7.1-GE-2-1" date="2022-01-31"/>
-    <release version="7.0rc6-GE-1-1" date="2022-01-16"/>
-    <release version="7.0rc3-GE-1-1" date="2021-12-29"/>
-    <release version="7.0rc2-GE-1-1" date="2021-12-20"/>
-    <release version="6.21-GE-2-1" date="2021-11-17"/>
-    <release version="6.21-GE-1-1" date="2021-11-14"/>
-    <release version="6.20-GE-1-1" date="2021-10-26"/>
-    <release version="6.19-GE-2-1" date="2021-10-11"/>
-    <release version="6.18-GE-2-1" date="2021-09-26"/>
-    <release version="6.16-GE-1-1" date="2021-08-30"/>
-    <release version="6.15-GE-2-1" date="2021-08-17"/>
-    <release version="6.15-GE-1-1" date="2021-08-16"/>
+    <release version="GE-Proton7-8-2" date="2022-03-06"/>
   </releases>
 </component>

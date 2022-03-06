@@ -21,6 +21,10 @@ build-options:
     PKG_CONFIG_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/pkgconfig:/app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib
     PYTHONPATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/python3.9/site-packages
+    FLATPAK_LIBDIR: /app/share/steam/compatibilitytools.d/Proton-GE/lib
+    FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine
+    FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-unix
+    FLATPAK_LIBDIR_WINE_PE: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-windows
   cflags: &optflags -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv
     -fno-strict-aliasing
   cflags-override: true
@@ -36,6 +40,10 @@ x-compat-i386-opts: &compat_i386_opts
     CXX: ccache i686-unknown-linux-gnu-g++
     PKG_CONFIG_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/pkgconfig:/app/lib32/pkgconfig:/app/share/pkgconfig:/usr/lib/i386-linux-gnu/pkgconfig:/usr/share/pkgconfig
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
+    FLATPAK_LIBDIR: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
+    FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine
+    FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-unix
+    FLATPAK_LIBDIR_WINE_PE: &lib32_wine_pe /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-windows
   libdir: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
   cflags: &optflags32 -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv
     -fno-strict-aliasing -mstackrealign
@@ -386,61 +394,6 @@ modules:
       - *proton_source
 
 
-  - name: FAudio
-    subdir: FAudio
-    buildsystem: cmake-ninja
-    builddir: true
-    config-opts: &FAudio-config-opts
-      - -DGSTREAMER=ON
-    sources:
-      - *proton_source
-
-  - name: FAudio-32bit
-    subdir: FAudio
-    only-arches:
-      - x86_64
-    build-options:
-      arch:
-        x86_64: *compat_i386_opts
-    buildsystem: cmake-ninja
-    builddir: true
-    config-opts: *FAudio-config-opts
-    sources:
-      - *proton_source
-
-
-  - name: jxrlib
-    subdir: jxrlib
-    buildsystem: cmake-ninja
-    builddir: true
-    build-options:
-      config-opts:
-        - -DJXRLIB_INSTALL_LIB_DIR=lib
-    config-opts: &jxrlib-config-opts
-      - -DCMAKE_INSTALL_RPATH=$ORIGIN
-    cleanup:
-      - /bin
-    sources:
-      - *proton_source
-
-  - name: jxrlib-32bit
-    subdir: jxrlib
-    only-arches:
-      - x86_64
-    build-options:
-      arch:
-        x86_64: *compat_i386_opts
-      config-opts:
-        - -DJXRLIB_INSTALL_LIB_DIR=lib32
-    buildsystem: cmake-ninja
-    builddir: true
-    config-opts: *jxrlib-config-opts
-    cleanup:
-      - /bin
-    sources:
-      - *proton_source
-
-
   - name: Vulkan-Headers
     subdir: Vulkan-Headers
     buildsystem: cmake-ninja
@@ -474,8 +427,6 @@ modules:
       - --without-oss
       #FIXME remove once vkd3d is removed from Steam bundle
       - --without-vkd3d
-      - --with-jxrlib
-      - JXRLIB_CFLAGS=-I/app/share/steam/compatibilitytools.d/Proton-GE/include/jxrlib
     make-install-args: &wine_common_make_install_args
       - LDCONFIG=/bin/true
       - UPDATE_DESKTOP_DATABASE=/bin/true
@@ -510,16 +461,13 @@ modules:
 
   - name: lsteamclient
     subdir: lsteamclient
-    build-options:
-      cxxflags: -Wno-attributes
-      config-opts:
-        - -L${FLATPAK_DEST}/lib
-        - -L${FLATPAK_DEST}/lib/wine/x86_64-unix
     config-opts: &lsteamclient_config_opts
       - --nosource-fix
       - --nolower-include
       - --nodlls
       - --nomsvcrt
+      - -L${FLATPAK_LIBDIR}
+      - -L${FLATPAK_LIBDIR_WINE_ELF}
       - -I${FLATPAK_DEST}/include
       - -I${FLATPAK_DEST}/include/wine
       - -I${FLATPAK_DEST}/include/wine/windows
@@ -534,9 +482,9 @@ modules:
     build-commands:
       - winebuild --dll --fake-module -E lsteamclient.spec -o lsteamclient.dll.fake
     no-make-install: true
-    post-install:
-      - install -Dm755 lsteamclient.dll.so ${FLATPAK_DEST}/lib/wine/x86_64-unix/lsteamclient.dll.so
-      - install -Dm755 lsteamclient.dll.fake ${FLATPAK_DEST}/lib/wine/x86_64-windows/lsteamclient.dll
+    post-install: &lsteamclient-post-install
+      - install -Dm755 lsteamclient.dll.so ${FLATPAK_LIBDIR_WINE_ELF}/lsteamclient.dll.so
+      - install -Dm755 lsteamclient.dll.fake ${FLATPAK_LIBDIR_WINE_PE}/lsteamclient.dll
     sources: &lsteamclient_sources
       - *proton_source
       - type: file
@@ -553,8 +501,6 @@ modules:
         x86_64: *compat_i386_opts
       cxxflags: -Wno-attributes
       config-opts:
-        - -L${FLATPAK_DEST}/lib32
-        - -L${FLATPAK_DEST}/lib32/wine/i386-unix
         - --wine32
       make-args: &winemaker_m32_make_args
         - CC=winegcc -m32
@@ -565,9 +511,7 @@ modules:
     build-commands:
       - winebuild --dll --fake-module -E lsteamclient.spec -o lsteamclient.dll.fake
     no-make-install: true
-    post-install:
-      - install -Dm755 lsteamclient.dll.so ${FLATPAK_DEST}/lib32/wine/i386-unix/lsteamclient.dll.so
-      - install -Dm755 lsteamclient.dll.fake ${FLATPAK_DEST}/lib32/wine/i386-windows/lsteamclient.dll
+    post-install: *lsteamclient-post-install
     sources: *lsteamclient_sources
 
 
@@ -587,15 +531,13 @@ modules:
 
   - name: steam_helper
     subdir: steam_helper
-    build-options:
-      config-opts:
-        - -L${FLATPAK_DEST}/lib
-        - -L${FLATPAK_DEST}/lib/wine/x86_64-unix
     config-opts: &steam_helper-config-opts
       - --nosource-fix
       - --nolower-include
       - --nodlls
       - --nomsvcrt
+      - -L${FLATPAK_LIBDIR}
+      - -L${FLATPAK_LIBDIR_WINE_ELF}
       - -I${FLATPAK_DEST}/include
       - -I${FLATPAK_DEST}/include/wine
       - -I${FLATPAK_DEST}/include/wine/windows
@@ -610,9 +552,9 @@ modules:
     build-commands: &steam_helper-build-commands
       - winebuild --exe --fake-module -F steam -o steam.exe.fake
     no-make-install: true
-    post-install:
-      - install -Dm755 steam_helper.exe.so ${FLATPAK_DEST}/lib/wine/x86_64-unix/steam.exe.so
-      - install -Dm755 steam.exe.fake ${FLATPAK_DEST}/lib/wine/x86_64-windows/steam.exe
+    post-install: &steam_helper-post-install
+      - install -Dm755 steam_helper.exe.so ${FLATPAK_LIBDIR_WINE_ELF}/steam.exe.so
+      - install -Dm755 steam.exe.fake ${FLATPAK_LIBDIR_WINE_PE}/steam.exe
     sources: &steam_helper-sources
       - *proton_source
       - type: file
@@ -628,16 +570,12 @@ modules:
       arch:
         x86_64: *compat_i386_opts
       config-opts:
-        - -L${FLATPAK_DEST}/lib32
-        - -L${FLATPAK_DEST}/lib32/wine/i386-unix
         - --wine32
       make-args: *winemaker_m32_make_args
     config-opts: *steam_helper-config-opts
     build-commands: *steam_helper-build-commands
     no-make-install: true
-    post-install:
-      - install -Dm755 steam_helper.exe.so ${FLATPAK_DEST}/lib32/wine/i386-unix/steam.exe.so
-      - install -Dm755 steam.exe.fake ${FLATPAK_DEST}/lib32/wine/i386-windows/steam.exe
+    post-install: *steam_helper-post-install
     sources: *steam_helper-sources
 
 
@@ -653,15 +591,13 @@ modules:
 
   - name: vrclient
     subdir: vrclient_x64/vrclient_x64
-    build-options:
-      config-opts:
-        - -L${FLATPAK_DEST}/lib
-        - -L${FLATPAK_DEST}/lib/wine
     config-opts: &vrclient_config_opts
       - --nosource-fix
       - --nolower-include
       - --nodlls
       - --nomsvcrt
+      - -L${FLATPAK_LIBDIR}
+      - -L${FLATPAK_LIBDIR_WINE_ELF}
       - -I${FLATPAK_DEST}/include
       - -I${FLATPAK_DEST}/include/wine
       - -I${FLATPAK_DEST}/include/wine/windows
@@ -675,8 +611,8 @@ modules:
       - winebuild --dll --fake-module -E vrclient_x64.spec -o vrclient_x64.dll.fake
     no-make-install: true
     post-install:
-      - install -Dm755 vrclient_x64.dll.so ${FLATPAK_DEST}/lib/wine/x86_64-unix/vrclient_x64.dll.so
-      - install -Dm755 vrclient_x64.dll.fake ${FLATPAK_DEST}/lib/wine/x86_64-windows/vrclient_x64.dll
+      - install -Dm755 vrclient_x64.dll.so ${FLATPAK_LIBDIR_WINE_ELF}/vrclient_x64.dll.so
+      - install -Dm755 vrclient_x64.dll.fake ${FLATPAK_LIBDIR_WINE_PE}/vrclient_x64.dll
     sources: &vrclient_sources
       - *proton_source
       - type: file
@@ -692,8 +628,6 @@ modules:
       arch:
         x86_64: *compat_i386_opts
       config-opts:
-        - -L${FLATPAK_DEST}/lib32
-        - -L${FLATPAK_DEST}/lib32/wine
         - --wine32
       make-args: *winemaker_m32_make_args
     make-args:
@@ -703,22 +637,20 @@ modules:
       - winebuild --dll --fake-module -E vrclient_x64.spec -o vrclient_x64.dll.fake
     no-make-install: true
     post-install:
-      - install -Dm755 vrclient_x64.dll.so ${FLATPAK_DEST}/lib32/wine/i386-unix/vrclient.dll.so
-      - install -Dm755 vrclient_x64.dll.fake ${FLATPAK_DEST}/lib32/wine/i386-windows/vrclient.dll
+      - install -Dm755 vrclient_x64.dll.so ${FLATPAK_LIBDIR_WINE_ELF}/vrclient.dll.so
+      - install -Dm755 vrclient_x64.dll.fake ${FLATPAK_LIBDIR_WINE_PE}/vrclient.dll
     sources: *vrclient_sources
 
 
   - name: wineopenxr
     subdir: wineopenxr
-    build-options:
-      config-opts:
-        - -L${FLATPAK_DEST}/lib
-        - -L${FLATPAK_DEST}/lib/wine
     config-opts:
       - --nosource-fix
       - --nolower-include
       - --nodlls
       - --nomsvcrt
+      - -L${FLATPAK_LIBDIR}
+      - -L${FLATPAK_LIBDIR_WINE_ELF}
       - -I${FLATPAK_DEST}/include
       - -I${FLATPAK_DEST}/include/wine
       - -I${FLATPAK_DEST}/include/wine/windows
@@ -732,8 +664,8 @@ modules:
       - winebuild --dll --fake-module -E wineopenxr.spec -o wineopenxr.dll.fake
     no-make-install: true
     post-install:
-      - install -Dm755 wineopenxr.dll.so -t ${FLATPAK_DEST}/lib/wine/x86_64-unix/
-      - install -Dm755 wineopenxr.dll.fake ${FLATPAK_DEST}/lib/wine/x86_64-windows/wineopenxr.dll
+      - install -Dm755 wineopenxr.dll.so -t ${FLATPAK_LIBDIR_WINE_ELF}/
+      - install -Dm755 wineopenxr.dll.fake ${FLATPAK_LIBDIR_WINE_PE}/wineopenxr.dll
     sources:
       - *proton_source
       - type: file
@@ -762,6 +694,8 @@ modules:
         sha256: 8ff2fcf9b054e4a4ef56fcd8a637322f827b2b176a592a618d63672ddb896e06
 
 
+# TODO: build vkd3d against cross-compiled Vulkan-Loader instead of Wine vulkan lib
+
   - name: vkd3d
     subdir: vkd3d
     build-options:
@@ -773,7 +707,6 @@ modules:
       env:
         CC: ccache x86_64-w64-mingw32-gcc
         LD: x86_64-w64-mingw32-ld
-        LIBDIR_WINE_PE: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-windows
       prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib/vkd3d/prefix
     config-opts: &vkd3d-config-opts
       - --disable-doxygen-doc
@@ -786,10 +719,9 @@ modules:
       - *proton_source
       - type: shell
         commands:
-          - install -D $LIBDIR_WINE_PE/vulkan-1.dll -t wine/dlls/vulkan-1/
+          - install -D $FLATPAK_LIBDIR_WINE_PE/vulkan-1.dll -t wine/dlls/vulkan-1/
     cleanup:
       - /lib/vkd3d/prefix
-
 
   - name: vkd3d-32bit
     subdir: vkd3d
@@ -802,7 +734,9 @@ modules:
       env:
         CC: ccache i686-w64-mingw32-gcc
         LD: i686-w64-mingw32-ld
-        LIBDIR_WINE_PE: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-windows
+        # XXX: build-options.arch.*.env overrides build-options.env
+        # so we can't easily use compat_i386_opts anchor here
+        FLATPAK_LIBDIR_WINE_PE: *lib32_wine_pe
       prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/vkd3d/prefix
     config-opts: *vkd3d-config-opts
     post-install:
@@ -965,8 +899,8 @@ modules:
       - cp -a wine-mono-*/ ${FLATPAK_DEST}/share/wine/mono/
     sources:
       - type: archive
-        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-7.0.0/wine-mono-7.0.0-x86.tar.xz
-        sha256: 2a047893f047b4f0f5b480f1947b7dda546cee3fec080beb105bf5759c563cd3
+        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-7.1.2/wine-mono-7.1.2-x86.tar.xz
+        sha256: 59f146dde0f0540ca4648fc648e6b16335c71921deaf111b5fe8c3967881661d
         strip-components: 0
 
 
@@ -994,7 +928,7 @@ modules:
         cat <<EOF > Makefile
         SRCDIR     := $(pwd)
         BUILD_NAME := proton-flatpak
-        include \$(SRCDIR)/build/makefile_base.mak
+        include \$(SRCDIR)/Makefile.in
         EOF
       - make fonts
       - find obj-fonts/ -xtype f \( -name "*.otf" -o -name "*.ttf" \) -ls -exec install
