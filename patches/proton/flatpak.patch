@@ -1,8 +1,8 @@
 diff --git a/proton b/proton
-index 3d938a81..0bdf8731 100755
+index f6cb2b84..7c3a0dff 100755
 --- a/proton
 +++ b/proton
-@@ -332,67 +332,23 @@ def set_dir_casefold_bit(dir_path):
+@@ -343,68 +343,24 @@ def set_dir_casefold_bit(dir_path):
  class Proton:
      def __init__(self, base_dir):
          self.base_dir = base_dir + "/"
@@ -24,6 +24,7 @@ index 3d938a81..0bdf8731 100755
 -        self.default_pfx_dir = self.path("files/share/default_pfx/")
 +        self.default_pfx_dir = self.path("share/default_pfx/")
          self.user_settings_file = self.path("user_settings.py")
+         self.gamemoderun = self.bin_dir + "gamemoderun"
          self.wine_bin = self.bin_dir + "wine"
          self.wine64_bin = self.bin_dir + "wine64"
          self.wineserver_bin = self.bin_dir + "wineserver"
@@ -78,7 +79,7 @@ index 3d938a81..0bdf8731 100755
  class CompatData:
      def __init__(self, compatdata):
          self.base_dir = compatdata + "/"
-@@ -1538,18 +1494,12 @@ if __name__ == "__main__":
+@@ -1583,18 +1539,12 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  

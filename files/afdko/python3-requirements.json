@@ -1,0 +1,112 @@
+{
+    "name": "python3-afdko",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"afdko<3.7\" --no-build-isolation"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/60/2e/dec1cc18c51b8df33c7c4d0a321b084cf38e1733b98f9d15018880fb4970/pytz-2022.1-py2.py3-none-any.whl",
+            "sha256": "e68985985296d9a66a881eb3193b0906246245294a881e7c8afe623866ac6a5c"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/3b/00/2344469e2084fb287c2e0b57b72910309874c3245463acd6cf5e3db69324/appdirs-1.4.4-py2.py3-none-any.whl",
+            "sha256": "a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/91/25/ba6f370e18359292f05ca4df93642eb7d1c424721ef61f61b8610a63d0c5/zopfli-0.2.1.zip",
+            "sha256": "e5263d2806e2c1ccb23f52b2972a235d31d42f22f3fa3032cc9aded51e9bf2c6"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/e8/10/85680b43276df4c485f1f14598681d8fd654aebd52872a8be405607cabaa/unicodedata2-14.0.0.tar.gz",
+            "sha256": "41f7df0043f4450e84203d907a56cdd2a0a0541a9eebbaba48576b01e0b61684"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/c0/20/7e6f631db2ba598ebaa6afd05188aa1557f6ff9af3f47fd963e0bd7ed79b/pyclipper-1.3.0.post2.tar.gz",
+            "sha256": "c096703dc32f2e4700a1f7054e8b58c29fe86212fa7a2c2adecb0102cb639fb2"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/04/38/13517a82da4543f5ea1ec1d6a35a302af12d35ec6bea3746d5f451e0dd0f/defcon-0.10.0-py3-none-any.whl",
+            "sha256": "4f5e5ee4dde51a43f3bddd5ef7909a9e75faf0ef572f4292c7df6fdc7afe3584"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/02/61/e3e6190a8d94c6a99d9605c721e1e38ebae19dc194059477affa57f6e111/MutatorMath-3.0.1-py2.py3-none-any.whl",
+            "sha256": "949dc3c1ea71c3b8a88cdeec6b3224b039d9da3888af133eb7e09ce1d5b19821"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/db/77/05be776c560a6cc9d89474782d7c3f6c86ee7cb61d15022436b5963d52cb/fs-2.4.15-py2.py3-none-any.whl",
+            "sha256": "86fbd7268edc365e5f120c4871addf2a0a899049625c35fe579910339296d13d"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/b0/5c/5dd502b0e2e0cb2980fc4ed17e970089003e377115abf79b1918097f4996/fonttools-4.31.2-py3-none-any.whl",
+            "sha256": "2df636a3f402ef14593c6811dac0609563b8c374bd7850e76919eb51ea205426"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/ba/9d/d084c2760c735e8f81c2a3c9e0d403cfacb811daf5166fbaa353e6d647c5/fontPens-0.2.4-py2.py3-none-any.whl",
+            "sha256": "cdef727e49b54ac6228f8fa087ee539258f7b0a6f0accb63cbf31d4bfc437ce7"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/68/b2/984d339d02c9ec56632e2095f5630e5259764ca67d7e55d4dd4e0989f491/fontParts-0.10.4-py3-none-any.whl",
+            "sha256": "abe366502c9b65eb7e75a060b2b966ca01cd229190feb14d2f0e76144ac692d9"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/2a/18/70c32fe9357f3eea18598b23aa9ed29b1711c3001835f7cf99a9818985d0/Brotli-1.0.9.zip",
+            "sha256": "4d1b810aa0ed773f81dceda2cc7b403d01057458730e309856356d4ef4188438"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/47/66/8ce437915371d6813339d236d8beb6cbef601d125e94d7c09bfa0f6dd5c6/ufoProcessor-1.9.0-py2.py3-none-any.whl",
+            "sha256": "0b77d4055306872d5df662feec6d066bdd34fc304c5a6c5999d2bcfd1720e637"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/41/cd/b342982ab4b0bd4ce865b286abc2a058e65203ec5df77cf79b45fb3efc95/ufonormalizer-0.6.1-py3-none-any.whl",
+            "sha256": "7a93d903391a7867e99754a037a571e16b0459fd75a44418b8d0187307d846d8"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/a6/73/7780b2c0868bdce1f13ce27b09b239f0eefc975a5c7ebc82a7613b2a2f05/tqdm-4.63.1-py2.py3-none-any.whl",
+            "sha256": "6461b009d6792008d0000e1b0c7ca50195ec78c0e808a3a6b668a56a3236c3a5"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/91/74/014da6e9280844cec6a73a04e069d95740e5520fd9477afbf31208d0e2f4/psautohint-2.4.0.tar.gz",
+            "sha256": "d50edea8f6121c3383f0d82f881bf7a18bdd476cc2d354737672ce193c3cff7f"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/3b/94/e2b1b3bad91d15526c7e38918795883cee18b93f6785ea8ecf13f8ffa01e/lxml-4.8.0.tar.gz",
+            "sha256": "f63f62fc60e6228a4ca9abae28228f35e1bd3ce675013d1dfb828688d50c6e23"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/ac/02/771713d2510763aef89f6d49d04342f5199c27e049735e52dd07c9d2d6de/fontMath-0.9.1-py2.py3-none-any.whl",
+            "sha256": "df05fe830661a8e4e66a5b773f748a734b9bcde17e7dd620f98faacd7d014bf3"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/fc/c6/c4cae54f482465a33c5f011d95ec64293dce9e012dac7873147c2dc85396/booleanOperations-0.9.0-py3-none-any.whl",
+            "sha256": "86c291c2fba9faedff6f007c932d7f242dd9b4304e9c6ca8149f864d07877a59"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/7c/f6/e0b36bb0970e82018a5b508656ee16b6300dc1cc91f1f9b9149d5d47e7fa/afdko-3.6.2.tar.gz",
+            "sha256": "b1a2634848048fb235c25243c4e7148d1eb7919d91af6234cd5b805ac96c8ddd"
+        }
+    ],
+    "cleanup": [
+        "*"
+    ]
+}
