@@ -963,6 +963,26 @@ modules:
             sha256: 68bcba8f602819eddc29cd356ee13fafbad7a80d19b652d354c6791343476c78
       - files/afdko/afdko.json
 
+      - name: afdko-script
+        buildsystem: simple
+        build-commands:
+          - install -Dm755 -t ${FLATPAK_DEST}/bin afdko
+        sources:
+          - type: script
+            dest-filename: afdko
+            commands:
+              - exec "$@"
+
+      - name: rsync
+        config-opts:
+          - --disable-xxhash
+        cleanup:
+          - '*'
+        sources:
+          - type: archive
+            url: https://www.samba.org/ftp/rsync/src/rsync-3.2.3.tar.gz
+            sha256: becc3c504ceea499f4167a260040ccf4d9f2ef9499ad5683c179a697146ce50e
+
 
   - name: protonfixes
     buildsystem: simple
