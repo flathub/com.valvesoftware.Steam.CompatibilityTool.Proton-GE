@@ -899,8 +899,8 @@ modules:
       - cp -a wine-mono-*/ ${FLATPAK_DEST}/share/wine/mono/
     sources:
       - type: archive
-        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-7.1.5/wine-mono-7.1.5-x86.tar.xz
-        sha256: cb03854b5d868b2d0912da42e01536bb673e009ed5263f4eeb8836a2a9c36f43
+        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-7.2.0/wine-mono-7.2.0-x86.tar.xz
+        sha256: 25a4d08fee9197be83307e65553da450b6d4446cc9188d0a85212cc2cee2660d
         strip-components: 0
 
 
