@@ -438,7 +438,7 @@ modules:
         commands:
           - autoreconf -fiv
           - tools/make_requests
-          - dlls/winevulkan/make_vulkan --verbose --xml ${PWD}/vk.xml
+          - dlls/winevulkan/make_vulkan --verbose --xml vk.xml
 
   - name: wine-32bit
     subdir: wine
