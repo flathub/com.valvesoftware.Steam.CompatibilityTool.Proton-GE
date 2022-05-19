@@ -437,6 +437,10 @@ modules:
         dest: wine
         commands:
           - autoreconf -fiv
+      - &wine-source-winevulkan
+        type: shell
+        dest: wine
+        commands:
           - tools/make_requests
           - dlls/winevulkan/make_vulkan --verbose --xml vk.xml
 
@@ -557,6 +561,7 @@ modules:
       - install -Dm755 steam.exe.fake ${FLATPAK_LIBDIR_WINE_PE}/steam.exe
     sources: &steam_helper-sources
       - *proton_source
+      - *wine-source-winevulkan
       - type: file
         path: winemaker-configure.sh
         dest: steam_helper
@@ -668,6 +673,7 @@ modules:
       - install -Dm755 wineopenxr.dll.fake ${FLATPAK_LIBDIR_WINE_PE}/wineopenxr.dll
     sources:
       - *proton_source
+      - *wine-source-winevulkan
       - type: file
         path: winemaker-configure.sh
         dest: wineopenxr
