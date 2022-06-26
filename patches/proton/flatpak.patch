@@ -1,8 +1,8 @@
 diff --git a/proton b/proton
-index 1c7a9e1f..964ab842 100755
+index fde70c90..b19751f6 100755
 --- a/proton
 +++ b/proton
-@@ -343,67 +343,23 @@ def set_dir_casefold_bit(dir_path):
+@@ -404,67 +404,23 @@ def set_dir_casefold_bit(dir_path):
  class Proton:
      def __init__(self, base_dir):
          self.base_dir = base_dir + "/"
@@ -78,7 +78,7 @@ index 1c7a9e1f..964ab842 100755
  class CompatData:
      def __init__(self, compatdata):
          self.base_dir = compatdata + "/"
-@@ -1582,18 +1538,12 @@ if __name__ == "__main__":
+@@ -1627,18 +1583,12 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -94,6 +94,6 @@ index 1c7a9e1f..964ab842 100755
 -    if g_proton.missing_default_prefix():
 -        g_proton.make_default_prefix()
 -
-     import protonfixes
- 
      g_session.init_session(sys.argv[1] != "runinprefix")
+ 
+     import protonfixes
