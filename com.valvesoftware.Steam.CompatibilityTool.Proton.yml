@@ -971,6 +971,8 @@ modules:
         buildsystem: simple
         build-commands:
           - install -Dm755 -t ${FLATPAK_DEST}/bin afdko
+        cleanup:
+          - '*'
         sources:
           - type: script
             dest-filename: afdko
