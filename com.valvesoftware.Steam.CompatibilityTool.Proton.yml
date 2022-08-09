@@ -378,6 +378,35 @@ modules:
       - *proton_source
 
 
+  - name: vkd3d-d3d12
+    subdir: vkd3d
+    build-options:
+      arch:
+        x86_64:
+          env:
+            WIDL: x86_64-w64-mingw32-widl
+    config-opts: &vkd3d-config-opts
+      - --disable-doxygen-doc
+      - --disable-tests
+      - --disable-demos
+      - --without-ncurses
+    sources:
+      - *proton_source
+
+  - name: vkd3d-d3d12-32bit
+    subdir: vkd3d
+    only-arches:
+      - x86_64
+    build-options:
+      arch:
+        x86_64: *compat_i386_opts
+      env:
+        WIDL: i686-w64-mingw32-widl
+    config-opts: *vkd3d-config-opts
+    sources:
+      - *proton_source
+
+
   - name: wine
     subdir: wine
     build-options:
@@ -395,8 +424,6 @@ modules:
       - --with-dbus
       - --without-hal
       - --without-oss
-      #FIXME remove once vkd3d is removed from Steam bundle
-      - --without-vkd3d
     make-install-args: &wine_common_make_install_args
       - LDCONFIG=/bin/true
       - UPDATE_DESKTOP_DATABASE=/bin/true
@@ -675,6 +702,10 @@ modules:
   - name: vkd3d
     subdir: vkd3d
     build-options:
+      arch:
+        x86_64:
+          env:
+            WIDL: x86_64-w64-mingw32-widl
       ldflags: >-
         -L/run/build/vkd3d/wine/dlls/vulkan-1
       ldflags-override: true
@@ -684,11 +715,7 @@ modules:
         CC: ccache x86_64-w64-mingw32-gcc
         LD: x86_64-w64-mingw32-ld
       prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib/vkd3d/prefix
-    config-opts: &vkd3d-config-opts
-      - --disable-doxygen-doc
-      - --disable-tests
-      - --disable-demos
-      - --without-ncurses
+    config-opts: *vkd3d-config-opts
     post-install:
       - mv -v ${FLATPAK_DEST}/lib/vkd3d/{prefix/bin/,}libvkd3d-shader-1.dll
     sources: &vkd3d-sources
@@ -713,6 +740,7 @@ modules:
         # XXX: build-options.arch.*.env overrides build-options.env
         # so we can't easily use compat_i386_opts anchor here
         FLATPAK_LIBDIR_WINE_PE: *lib32_wine_pe
+        WIDL: i686-w64-mingw32-widl
       prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/vkd3d/prefix
     config-opts: *vkd3d-config-opts
     post-install:
@@ -737,7 +765,7 @@ modules:
     config-opts: &vkd3d-proton-config-opts
       - --buildtype=release
       - --strip
-      - -Denable_standalone_d3d12=true
+      - -Denable_d3d12=true
     post-install:
       - |
         cd ${FLATPAK_DEST}/lib/wine/vkd3d-proton
