@@ -77,6 +77,26 @@ cleanup:
   - /lib/wine/*.def
   - /lib32/wine/*.def
 modules:
+  - name: graphene
+    subdir: graphene
+    buildsystem: meson
+    builddir: true
+    sources:
+      - *proton_source
+
+  - name: graphene-32bit
+    subdir: graphene
+    only-arches:
+      - x86_64
+    build-options:
+      arch:
+        x86_64: *compat_i386_opts
+    buildsystem: meson
+    builddir: true
+    sources:
+      - *proton_source
+
+
   - name: gst-orc
     subdir: gst-orc
     buildsystem: meson
@@ -152,7 +172,6 @@ modules:
       - -Dcompositor=disabled
       - -Dencoding=disabled
       - -Dgio=disabled
-      - -Dgl=disabled
       - -Dlibvisual=disabled
       - -Doverlaycomposition=disabled
       - -Dpango=disabled
@@ -172,6 +191,9 @@ modules:
       - -Dglib-asserts=disabled
       - -Dglib-checks=disabled
       - -Dnls=disabled
+      - -Dorc=enabled
+      - -Dgl=enabled
+      - -Dgl-graphene=enabled
     sources:
       - *proton_source
 
@@ -235,6 +257,8 @@ modules:
       - -Dshout2=disabled
       - -Dsmpte=disabled
       - -Dsoup=enabled
+      - -Dwavparse=enabled
+      - -Dorc=enabled
       - -Dspectrum=disabled
       - -Dtaglib=disabled
       - -Dudp=disabled
@@ -298,6 +322,7 @@ modules:
       - -Dgobject-cast-checks=disabled
       - -Dglib-asserts=disabled
       - -Dglib-checks=disabled
+      - -Dorc=enabled
       - -Dnls=disabled
     sources:
       - *proton_source
@@ -326,6 +351,7 @@ modules:
       - -Dgobject-cast-checks=disabled
       - -Dglib-asserts=disabled
       - -Dglib-checks=disabled
+      - -Dorc=enabled
       - -Dnls=disabled
     sources:
       - *proton_source
@@ -903,8 +929,8 @@ modules:
       - cp -a wine-mono-*/ ${FLATPAK_DEST}/share/wine/mono/
     sources:
       - type: archive
-        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-7.3.0/wine-mono-7.3.0-x86.tar.xz
-        sha256: 60314f255031b2f4dc49f22eacfcd2b3b8b2b491120d703b4b62cc1fef0f9bdd
+        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-7.3.1/wine-mono-7.3.1-x86.tar.xz
+        sha256: 55ca808868599b1d8ad53b222b8cb26fd96fa818c511163e361238025c76e9fe
         strip-components: 0
 
 
