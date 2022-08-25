@@ -8,3 +8,4 @@ x-checker-data:
   version-query: .tag_name | sub("^GE-Proton"; "") | sub("-"; ".")
   url-query: .assets[] | select(.name=="proton-ge-custom-src.tar.xz") | .browser_download_url
   is-main-source: true
+  source-id: proton-tarball-0
