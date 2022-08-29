@@ -932,6 +932,12 @@ modules:
         url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-7.3.1/wine-mono-7.3.1-x86.tar.xz
         sha256: 55ca808868599b1d8ad53b222b8cb26fd96fa818c511163e361238025c76e9fe
         strip-components: 0
+        x-checker-data:
+          type: html
+          parent-id: proton-tarball-0
+          url: https://github.com/GloriousEggroll/proton-ge-custom/raw/GE-Proton$parent_major-$parent_minor/Makefile.in
+          version-pattern: WINEMONO_VER\s+:=\s+(\d+\.\d+\.\d+)
+          url-template: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-$version/wine-mono-$version-x86.tar.xz
 
 
   - name: wine-gecko-bin
@@ -946,9 +952,21 @@ modules:
       - type: file
         url: https://dl.winehq.org/wine/wine-gecko/2.47.3/wine-gecko-2.47.3-x86.tar.xz
         sha256: 08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3
+        x-checker-data:
+          type: html
+          parent-id: proton-tarball-0
+          url: https://github.com/GloriousEggroll/proton-ge-custom/raw/GE-Proton$parent_major-$parent_minor/Makefile.in
+          version-pattern: GECKO_VER\s+:=\s+(\d+\.\d+\.\d+)
+          url-template: https://dl.winehq.org/wine/wine-gecko/$version/wine-gecko-$version-x86.tar.xz
       - type: file
         url: https://dl.winehq.org/wine/wine-gecko/2.47.3/wine-gecko-2.47.3-x86_64.tar.xz
         sha256: 0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75
+        x-checker-data:
+          type: html
+          parent-id: proton-tarball-0
+          url: https://github.com/GloriousEggroll/proton-ge-custom/raw/GE-Proton$parent_major-$parent_minor/Makefile.in
+          version-pattern: GECKO_VER\s+:=\s+(\d+\.\d+\.\d+)
+          url-template: https://dl.winehq.org/wine/wine-gecko/$version/wine-gecko-$version-x86_64.tar.xz
 
 
   - name: fonts
