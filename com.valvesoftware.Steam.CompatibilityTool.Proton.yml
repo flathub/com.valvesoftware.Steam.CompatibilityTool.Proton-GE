@@ -2,7 +2,7 @@ id: com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 default-branch: stable
 runtime: com.valvesoftware.Steam
 runtime-version: stable
-sdk: org.freedesktop.Sdk//21.08
+sdk: org.freedesktop.Sdk//22.08
 build-extension: true
 appstream-compose: false
 
@@ -20,7 +20,7 @@ build-options:
     CPLUS_INCLUDE_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/include:/app/include
     PKG_CONFIG_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/pkgconfig:/app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib
-    PYTHONPATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/python3.9/site-packages
+    PYTHONPATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/python3.10/site-packages
     FLATPAK_LIBDIR: /app/share/steam/compatibilitytools.d/Proton-GE/lib
     FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine
     FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-unix
