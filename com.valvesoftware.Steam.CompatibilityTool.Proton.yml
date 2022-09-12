@@ -529,7 +529,6 @@ modules:
     config-opts: &dxvk_config_opts
       - --buildtype=release
       - --strip
-      - -Denable_tests=false
       - -Denable_dxgi=true
       - -Denable_d3d9=true
       - -Denable_d3d10=true
