@@ -401,13 +401,12 @@ modules:
 
 
   - name: glslang
+    subdir: glslang
     buildsystem: cmake-ninja
     cleanup:
       - '*'
     sources:
-      - type: archive
-        url: https://github.com/KhronosGroup/glslang/archive/refs/tags/11.2.0.tar.gz
-        sha256: 8ff2fcf9b054e4a4ef56fcd8a637322f827b2b176a592a618d63672ddb896e06
+      - *proton_source
 
 
 # TODO: build vkd3d against cross-compiled Vulkan-Loader instead of Wine vulkan lib
