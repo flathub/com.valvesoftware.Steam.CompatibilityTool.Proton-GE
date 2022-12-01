@@ -477,7 +477,6 @@ modules:
     config-opts: &vkd3d-proton-config-opts
       - --buildtype=release
       - --strip
-      - -Denable_d3d12=true
     post-install:
       - |
         cd ${FLATPAK_DEST}/lib/wine/vkd3d-proton
