@@ -613,8 +613,8 @@ modules:
       - cp -a wine-mono-*/ ${FLATPAK_DEST}/share/wine/mono/
     sources:
       - type: archive
-        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-7.3.1/wine-mono-7.3.1-x86.tar.xz
-        sha256: 55ca808868599b1d8ad53b222b8cb26fd96fa818c511163e361238025c76e9fe
+        url: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-7.4.0/wine-mono-7.4.0-x86.tar.xz
+        sha256: 9249ece664bcf2fecb1308ea1d2542c72923df9fe3df891986f137b2266a9ba3
         strip-components: 0
         x-checker-data:
           type: html
@@ -668,6 +668,7 @@ modules:
     sources:
       - *proton_source
     modules:
+
       - name: fontforge
         buildsystem: cmake-ninja
         builddir: true
