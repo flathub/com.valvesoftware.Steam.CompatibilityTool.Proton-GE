@@ -5,7 +5,7 @@ sha256: a5edae73d32f0614357e14a37e7a83e66ee0459e538f79a2bca0141f0d3b423d
 x-checker-data:
   type: json
   url: https://api.github.com/repos/lctrs/proton-ge-custom-tarball-maker/releases/latest
-  version-query: .tag_name | sub("^GE-Proton"; "") | sub("-"; ".")
+  version-query: .tag_name | sub("^GE-Proton"; "") | gsub("-"; ".")
   url-query: .assets[] | select(.name=="proton-ge-custom-src.tar.xz") | .browser_download_url
   is-main-source: true
   source-id: proton-tarball-0
