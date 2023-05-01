@@ -643,15 +643,11 @@ modules:
   - name: fonts
     buildsystem: simple
     build-commands:
-      - |
-        cat <<EOF > Makefile
-        SRCDIR     := $(pwd)
-        BUILD_NAME := proton-flatpak
-        include \$(SRCDIR)/Makefile.in
-        EOF
-      - make fonts
-      - find obj-fonts/ -xtype f \( -name "*.otf" -o -name "*.ttf" \) -ls -exec install
-        -Dm0644 -t ${FLATPAK_DEST}/share/fonts/ {} \;
+      - make -f Makefile.in "CURDIR=$(pwd)" "SRCDIR=$(pwd)" BUILD_NAME=proton-flatpak CONTAINER=1 fonts
+      - >-
+          find obj-fonts/
+          -xtype f \( -name "*.otf" -o -name "*.ttf" \)
+          -ls -exec install -Dm0644 -t ${FLATPAK_DEST}/share/fonts/ {} \;
     sources:
       - *proton_source
     modules:
