@@ -259,6 +259,7 @@ modules:
       - -I../wine/include
       - -I../openvr/headers
       - -lsteam_api
+      - -lshlwapi
       - -lmsi
       - -lole32
       - -ldl
