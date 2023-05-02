@@ -377,6 +377,7 @@ modules:
       - -lopenxr_loader
       - -ldxgi
       - -lvulkan
+      - -ldl
       - --dll
       - .
     build-commands:
