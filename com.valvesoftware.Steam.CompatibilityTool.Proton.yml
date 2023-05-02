@@ -99,6 +99,7 @@ modules:
           env:
             WIDL: x86_64-w64-mingw32-widl
     config-opts: &vkd3d-config-opts
+      - --enable-silent-rules
       - --disable-doxygen-doc
       - --disable-tests
       - --disable-demos
