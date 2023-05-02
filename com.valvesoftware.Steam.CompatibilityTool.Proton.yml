@@ -26,7 +26,7 @@ build-options:
     FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-unix
     FLATPAK_LIBDIR_WINE_PE: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-windows
   cflags: &optflags -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv
-    -fno-strict-aliasing
+    -fno-strict-aliasing -mcmodel=small
   cflags-override: true
   cxxflags: *optflags
   cxxflags-override: true
