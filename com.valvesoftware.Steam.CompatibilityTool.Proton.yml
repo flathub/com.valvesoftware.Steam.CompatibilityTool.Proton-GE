@@ -43,7 +43,7 @@ x-compat-i386-opts: &compat_i386_opts
     FLATPAK_LIBDIR: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
     FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine
     FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-unix
-    FLATPAK_LIBDIR_WINE_PE: &lib32_wine_pe /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-windows
+    FLATPAK_LIBDIR_WINE_PE: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-windows
   libdir: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
   cflags: &optflags32 -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv
     -fno-strict-aliasing -mstackrealign
@@ -91,7 +91,7 @@ modules:
       - *proton_source
 
 
-  - name: vkd3d-d3d12
+  - name: vkd3d
     subdir: vkd3d
     build-options:
       arch:
@@ -104,10 +104,13 @@ modules:
       - --disable-tests
       - --disable-demos
       - --without-ncurses
+    post-install:
+      - mv -v ${FLATPAK_DEST}/lib/vkd3d/{prefix/bin/,}libvkd3d-1.dll
+      - mv -v ${FLATPAK_DEST}/lib/vkd3d/{prefix/bin/,}libvkd3d-shader-1.dll
     sources:
       - *proton_source
 
-  - name: vkd3d-d3d12-32bit
+  - name: vkd3d-32bit
     subdir: vkd3d
     only-arches:
       - x86_64
@@ -117,6 +120,9 @@ modules:
       env:
         WIDL: i686-w64-mingw32-widl
     config-opts: *vkd3d-config-opts
+    post-install:
+      - mv -v ${FLATPAK_DEST}/lib32/vkd3d/{prefix/bin/,}libvkd3d-1.dll
+      - mv -v ${FLATPAK_DEST}/lib32/vkd3d/{prefix/bin/,}libvkd3d-shader-1.dll
     sources:
       - *proton_source
 
@@ -412,61 +418,6 @@ modules:
       - '*'
     sources:
       - *proton_source
-
-
-# TODO: build vkd3d against cross-compiled Vulkan-Loader instead of Wine vulkan lib
-
-  - name: vkd3d
-    subdir: vkd3d
-    build-options:
-      arch:
-        x86_64:
-          env:
-            WIDL: x86_64-w64-mingw32-widl
-      ldflags: >-
-        -L/run/build/vkd3d/wine/dlls/vulkan-1
-      ldflags-override: true
-      config-opts:
-        - --host=x86_64-w64-mingw32
-      env:
-        CC: ccache x86_64-w64-mingw32-gcc
-        LD: x86_64-w64-mingw32-ld
-      prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib/vkd3d/prefix
-    config-opts: *vkd3d-config-opts
-    post-install:
-      - mv -v ${FLATPAK_DEST}/lib/vkd3d/{prefix/bin/,}libvkd3d-1.dll
-      - mv -v ${FLATPAK_DEST}/lib/vkd3d/{prefix/bin/,}libvkd3d-shader-1.dll
-    sources: &vkd3d-sources
-      - *proton_source
-      - type: shell
-        commands:
-          - install -D $FLATPAK_LIBDIR_WINE_PE/vulkan-1.dll -t wine/dlls/vulkan-1/
-    cleanup:
-      - /lib/vkd3d/prefix
-
-  - name: vkd3d-32bit
-    subdir: vkd3d
-    build-options:
-      ldflags: >-
-        -L/run/build/vkd3d-32bit/wine/dlls/vulkan-1
-      ldflags-override: true
-      config-opts:
-        - --host=i686-w64-mingw32
-      env:
-        CC: ccache i686-w64-mingw32-gcc
-        LD: i686-w64-mingw32-ld
-        # XXX: build-options.arch.*.env overrides build-options.env
-        # so we can't easily use compat_i386_opts anchor here
-        FLATPAK_LIBDIR_WINE_PE: *lib32_wine_pe
-        WIDL: i686-w64-mingw32-widl
-      prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/vkd3d/prefix
-    config-opts: *vkd3d-config-opts
-    post-install:
-      - mv -v ${FLATPAK_DEST}/lib32/vkd3d/{prefix/bin/,}libvkd3d-1.dll
-      - mv -v ${FLATPAK_DEST}/lib32/vkd3d/{prefix/bin/,}libvkd3d-shader-1.dll
-    sources: *vkd3d-sources
-    cleanup:
-      - /lib32/vkd3d/prefix
 
 
   - name: vkd3d-proton
