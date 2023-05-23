@@ -91,7 +91,7 @@ modules:
       - *proton_source
 
 
-  - name: vkd3d-d3d12
+  - name: vkd3d
     subdir: vkd3d
     build-options:
       arch:
@@ -107,7 +107,7 @@ modules:
     sources:
       - *proton_source
 
-  - name: vkd3d-d3d12-32bit
+  - name: vkd3d-32bit
     subdir: vkd3d
     only-arches:
       - x86_64
@@ -416,7 +416,7 @@ modules:
 
 # TODO: build vkd3d against cross-compiled Vulkan-Loader instead of Wine vulkan lib
 
-  - name: vkd3d
+  - name: vkd3d-wine
     subdir: vkd3d
     build-options:
       arch:
@@ -444,7 +444,7 @@ modules:
     cleanup:
       - /lib/vkd3d/prefix
 
-  - name: vkd3d-32bit
+  - name: vkd3d-wine-32bit
     subdir: vkd3d
     build-options:
       ldflags: >-
