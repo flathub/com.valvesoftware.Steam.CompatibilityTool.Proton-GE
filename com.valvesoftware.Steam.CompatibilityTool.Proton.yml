@@ -748,8 +748,8 @@ modules:
           - '*'
         sources:
           - type: archive
-            url: https://github.com/fontforge/fontforge/releases/download/20201107/fontforge-20201107.tar.xz
-            sha256: 68bcba8f602819eddc29cd356ee13fafbad7a80d19b652d354c6791343476c78
+            url: https://github.com/fontforge/fontforge/releases/download/20230101/fontforge-20230101.tar.xz
+            sha256: ca82ec4c060c4dda70ace5478a41b5e7b95eb035fe1c4cf85c48f996d35c60f8
       - files/afdko/afdko.json
 
       - name: afdko-script
