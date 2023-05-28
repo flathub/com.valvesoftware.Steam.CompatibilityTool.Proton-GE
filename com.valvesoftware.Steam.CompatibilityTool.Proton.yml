@@ -25,8 +25,15 @@ build-options:
     FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine
     FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-unix
     FLATPAK_LIBDIR_WINE_PE: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-windows
-  cflags: &optflags -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv
+  cflags: &optflags >-
+    -O2
+    -pipe
+    -march=nocona
+    -mtune=core-avx2
+    -mfpmath=sse
+    -fwrapv
     -fno-strict-aliasing
+    -mcmodel=small
   cflags-override: true
   cxxflags: *optflags
   cxxflags-override: true
@@ -43,10 +50,17 @@ x-compat-i386-opts: &compat_i386_opts
     FLATPAK_LIBDIR: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
     FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine
     FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-unix
-    FLATPAK_LIBDIR_WINE_PE: &lib32_wine_pe /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-windows
+    FLATPAK_LIBDIR_WINE_PE: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/wine/i386-windows
   libdir: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
-  cflags: &optflags32 -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv
-    -fno-strict-aliasing -mstackrealign
+  cflags: &optflags32 >-
+    -O2
+    -pipe
+    -march=nocona
+    -mtune=core-avx2
+    -mfpmath=sse
+    -fwrapv
+    -fno-strict-aliasing
+    -mstackrealign
   cflags-override: true
   cxxflags: *optflags32
   cxxflags-override: true
@@ -91,7 +105,7 @@ modules:
       - *proton_source
 
 
-  - name: vkd3d-d3d12
+  - name: vkd3d
     subdir: vkd3d
     build-options:
       arch:
@@ -99,6 +113,7 @@ modules:
           env:
             WIDL: x86_64-w64-mingw32-widl
     config-opts: &vkd3d-config-opts
+      - --enable-silent-rules
       - --disable-doxygen-doc
       - --disable-tests
       - --disable-demos
@@ -106,7 +121,7 @@ modules:
     sources:
       - *proton_source
 
-  - name: vkd3d-d3d12-32bit
+  - name: vkd3d-32bit
     subdir: vkd3d
     only-arches:
       - x86_64
@@ -259,6 +274,7 @@ modules:
       - -I../wine/include
       - -I../openvr/headers
       - -lsteam_api
+      - -lshlwapi
       - -lmsi
       - -lole32
       - -ldl
@@ -317,6 +333,7 @@ modules:
       - -I${FLATPAK_DEST}/include
       - -I${FLATPAK_DEST}/include/wine
       - -I${FLATPAK_DEST}/include/wine/windows
+      - -I../../wine/include
       - -I.
       - -I..
       - --dll
@@ -374,6 +391,7 @@ modules:
       - -lopenxr_loader
       - -ldxgi
       - -lvulkan
+      - -ldl
       - --dll
       - .
     build-commands:
@@ -410,55 +428,115 @@ modules:
       - *proton_source
 
 
-# TODO: build vkd3d against cross-compiled Vulkan-Loader instead of Wine vulkan lib
+  - name: vulkan-loader
+    subdir: Vulkan-Loader
+    buildsystem: cmake
+    build-options:
+      arch:
+        x86_64: &mingw-64-opts
+          ldflags: &mingw-ldflags-64 >-
+            -static-libgcc
+            -Wl,--file-alignment,4096
+            -L/app/share/steam/compatibilitytools.d/Proton-GE/lib
+            -L/app/lib
+          ldflags-override: true
+          env:
+            CC: ccache x86_64-w64-mingw32-gcc
+            LD: x86_64-w64-mingw32-ld
+            WIDL: x86_64-w64-mingw32-widl
+      config-opts:
+        - -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc
+        - -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-gcc
+        - -DINCLUDE_DIRECTORIES=/usr/lib/sdk/mingw-w64/x86_64-w64-mingw32/include /app/share/steam/compatibilitytools.d/Proton-GE/include
+        - -DCMAKE_CROSSCOMPILING=true
+        - -DVulkanHeaders_INCLUDE_DIR=/app/share/steam/compatibilitytools.d/Proton-GE/include
+        - -DCMAKE_BUILD_TYPE=plain
+        - -DCMAKE_SYSTEM_NAME=Windows
+        - -DCMAKE_SHARED_LIBRARY_PREFIX_C=
+        - -DCMAKE_IMPORT_LIBRARY_PREFIX_C=
+      prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib/vulkan-loader/prefix
+    post-install:
+      - mv -v ${FLATPAK_DEST}/lib/{vulkan-loader/prefix/bin/,}vulkan-1.dll
+    cleanup:
+      - /lib/vulkan-loader/prefix
+    config-opts: &vulkan-loader-config-opts
+      - -DUSE_MASM=OFF
+    sources:
+      - *proton_source
 
-  - name: vkd3d
+  - name: vulkan-loader-32bit
+    subdir: Vulkan-Loader
+    buildsystem: cmake
+    build-options:
+      arch:
+        x86_64: &mingw-32-opts
+          # XXX: build-options.arch.*.env overrides build-options.env
+          # so we can't easily use compat_i386_opts anchor here
+          cflags: *optflags32
+          cflags-override: true
+          cxxflags: *optflags32
+          cxxflags-override: true
+          ldflags: &mingw-ldflags-32 >-
+            -static-libgcc
+            -Wl,--file-alignment,4096
+            -L/app/share/steam/compatibilitytools.d/Proton-GE/lib32
+            -L/app/lib32
+          ldflags-override: true
+          env:
+            CC: ccache i686-w64-mingw32-gcc
+            LD: i686-w64-mingw32-ld
+            WIDL: i686-w64-mingw32-widl
+      config-opts:
+        - -DCMAKE_C_COMPILER=i686-w64-mingw32-gcc
+        - -DCMAKE_CXX_COMPILER=i686-w64-mingw32-gcc
+        - -DINCLUDE_DIRECTORIES=/usr/lib/sdk/mingw-w64/i686-w64-mingw32/include /app/share/steam/compatibilitytools.d/Proton-GE/include
+        - -DCMAKE_CROSSCOMPILING=true
+        - -DVulkanHeaders_INCLUDE_DIR=/app/share/steam/compatibilitytools.d/Proton-GE/include
+        - -DCMAKE_BUILD_TYPE=plain
+        - -DCMAKE_SYSTEM_NAME=Windows
+        - -DCMAKE_SHARED_LIBRARY_PREFIX_C=
+        - -DCMAKE_IMPORT_LIBRARY_PREFIX_C=
+      prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/vulkan-loader/prefix
+    post-install:
+      - mv -v ${FLATPAK_DEST}/lib32/{vulkan-loader/prefix/bin/,}vulkan-1.dll
+    cleanup:
+      - /lib32/vulkan-loader/prefix
+    config-opts: *vulkan-loader-config-opts
+    sources:
+      - *proton_source
+
+
+  - name: vkd3d-wine
     subdir: vkd3d
     build-options:
       arch:
-        x86_64:
-          env:
-            WIDL: x86_64-w64-mingw32-widl
-      ldflags: >-
-        -L/run/build/vkd3d/wine/dlls/vulkan-1
-      ldflags-override: true
+        x86_64: *mingw-64-opts
       config-opts:
         - --host=x86_64-w64-mingw32
-      env:
-        CC: ccache x86_64-w64-mingw32-gcc
-        LD: x86_64-w64-mingw32-ld
       prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib/vkd3d/prefix
     config-opts: *vkd3d-config-opts
     post-install:
+      - mv -v ${FLATPAK_DEST}/lib/vkd3d/{prefix/bin/,}libvkd3d-1.dll
       - mv -v ${FLATPAK_DEST}/lib/vkd3d/{prefix/bin/,}libvkd3d-shader-1.dll
-    sources: &vkd3d-sources
+    sources:
       - *proton_source
-      - type: shell
-        commands:
-          - install -D $FLATPAK_LIBDIR_WINE_PE/vulkan-1.dll -t wine/dlls/vulkan-1/
     cleanup:
       - /lib/vkd3d/prefix
 
-  - name: vkd3d-32bit
+  - name: vkd3d-wine-32bit
     subdir: vkd3d
     build-options:
-      ldflags: >-
-        -L/run/build/vkd3d-32bit/wine/dlls/vulkan-1
-      ldflags-override: true
+      arch:
+        x86_64: *mingw-32-opts
       config-opts:
         - --host=i686-w64-mingw32
-      env:
-        CC: ccache i686-w64-mingw32-gcc
-        LD: i686-w64-mingw32-ld
-        # XXX: build-options.arch.*.env overrides build-options.env
-        # so we can't easily use compat_i386_opts anchor here
-        FLATPAK_LIBDIR_WINE_PE: *lib32_wine_pe
-        WIDL: i686-w64-mingw32-widl
       prefix: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/vkd3d/prefix
     config-opts: *vkd3d-config-opts
     post-install:
+      - mv -v ${FLATPAK_DEST}/lib32/vkd3d/{prefix/bin/,}libvkd3d-1.dll
       - mv -v ${FLATPAK_DEST}/lib32/vkd3d/{prefix/bin/,}libvkd3d-shader-1.dll
-    sources: *vkd3d-sources
+    sources:
+      - *proton_source
     cleanup:
       - /lib32/vkd3d/prefix
 
@@ -467,7 +545,7 @@ modules:
     subdir: vkd3d-proton
     buildsystem: meson
     build-options:
-      ldflags: &mingw-ldflags ''
+      ldflags: *mingw-ldflags-64
       ldflags-override: true
       config-opts:
         - --cross-file=../build-win64.txt
@@ -499,7 +577,7 @@ modules:
     subdir: vkd3d-proton
     buildsystem: meson
     build-options:
-      ldflags: *mingw-ldflags
+      ldflags: *mingw-ldflags-32
       ldflags-override: true
       config-opts:
         - --cross-file=../build-win32.txt
@@ -517,8 +595,8 @@ modules:
     subdir: dxvk
     buildsystem: meson
     build-options:
-      ldflags: *mingw-ldflags
-      ldflags-override: true
+      arch:
+        x86_64: *mingw-64-opts
       config-opts:
         - --cross-file=../build-win64.txt
         - --cross-file=../meson-ccache-mingw64.txt
@@ -549,8 +627,8 @@ modules:
     subdir: dxvk
     buildsystem: meson
     build-options:
-      ldflags: *mingw-ldflags
-      ldflags-override: true
+      arch:
+        x86_64: *mingw-32-opts
       config-opts:
         - --cross-file=../build-win32.txt
         - --cross-file=../meson-ccache-mingw32.txt
@@ -567,7 +645,7 @@ modules:
     subdir: dxvk-nvapi
     buildsystem: meson
     build-options:
-      ldflags: ''
+      ldflags: *mingw-ldflags-64
       ldflags-override: true
       config-opts:
         - --cross-file=../build-win64.txt
@@ -593,7 +671,7 @@ modules:
     subdir: dxvk-nvapi
     buildsystem: meson
     build-options:
-      ldflags: ''
+      ldflags: *mingw-ldflags-32
       ldflags-override: true
       config-opts:
         - --cross-file=../build-win32.txt
@@ -639,15 +717,11 @@ modules:
   - name: fonts
     buildsystem: simple
     build-commands:
-      - |
-        cat <<EOF > Makefile
-        SRCDIR     := $(pwd)
-        BUILD_NAME := proton-flatpak
-        include \$(SRCDIR)/Makefile.in
-        EOF
-      - make fonts
-      - find obj-fonts/ -xtype f \( -name "*.otf" -o -name "*.ttf" \) -ls -exec install
-        -Dm0644 -t ${FLATPAK_DEST}/share/fonts/ {} \;
+      - make -f Makefile.in "CURDIR=$(pwd)" "SRCDIR=$(pwd)" BUILD_NAME=proton-flatpak CONTAINER=1 fonts
+      - >-
+          find obj-fonts/
+          -xtype f \( -name "*.otf" -o -name "*.ttf" \)
+          -ls -exec install -Dm0644 -t ${FLATPAK_DEST}/share/fonts/ {} \;
     sources:
       - *proton_source
     modules:
@@ -674,8 +748,8 @@ modules:
           - '*'
         sources:
           - type: archive
-            url: https://github.com/fontforge/fontforge/releases/download/20201107/fontforge-20201107.tar.xz
-            sha256: 68bcba8f602819eddc29cd356ee13fafbad7a80d19b652d354c6791343476c78
+            url: https://github.com/fontforge/fontforge/releases/download/20230101/fontforge-20230101.tar.xz
+            sha256: ca82ec4c060c4dda70ace5478a41b5e7b95eb035fe1c4cf85c48f996d35c60f8
       - files/afdko/afdko.json
 
       - name: afdko-script
