@@ -294,7 +294,7 @@ modules:
         dest: steam_helper
         dest-filename: configure
       - type: patch
-        path: steam_helper-fix-hwnd-redefinition.patch
+        path: fix-hwnd-redefinition.patch
 
   - name: steam_helper-32bit
     subdir: steam_helper
@@ -354,6 +354,8 @@ modules:
         path: winemaker-configure.sh
         dest: vrclient_x64/vrclient_x64
         dest-filename: configure
+      - type: patch
+        path: fix-hwnd-redefinition.patch
 
   - name: vrclient-32bit
     subdir: vrclient_x64/vrclient_x64
