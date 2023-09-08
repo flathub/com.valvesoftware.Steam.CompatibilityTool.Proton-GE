@@ -2,7 +2,7 @@ id: com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 default-branch: stable
 runtime: com.valvesoftware.Steam
 runtime-version: stable
-sdk: org.freedesktop.Sdk//22.08
+sdk: org.freedesktop.Sdk//23.08
 build-extension: true
 appstream-compose: false
 
@@ -20,7 +20,7 @@ build-options:
     CPLUS_INCLUDE_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/include:/app/include
     PKG_CONFIG_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/pkgconfig:/app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
     LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib
-    PYTHONPATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/python3.10/site-packages
+    PYTHONPATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib/python3.11/site-packages
     FLATPAK_LIBDIR: /app/share/steam/compatibilitytools.d/Proton-GE/lib
     FLATPAK_LIBDIR_WINE: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine
     FLATPAK_LIBDIR_WINE_ELF: /app/share/steam/compatibilitytools.d/Proton-GE/lib/wine/x86_64-unix
@@ -293,6 +293,8 @@ modules:
         path: winemaker-configure.sh
         dest: steam_helper
         dest-filename: configure
+      - type: patch
+        path: patches/proton/fix-hwnd-redefinition.patch
 
   - name: steam_helper-32bit
     subdir: steam_helper
@@ -352,6 +354,8 @@ modules:
         path: winemaker-configure.sh
         dest: vrclient_x64/vrclient_x64
         dest-filename: configure
+      - type: patch
+        path: patches/proton/fix-hwnd-redefinition.patch
 
   - name: vrclient-32bit
     subdir: vrclient_x64/vrclient_x64
@@ -750,6 +754,8 @@ modules:
           - type: archive
             url: https://github.com/fontforge/fontforge/releases/download/20230101/fontforge-20230101.tar.xz
             sha256: ca82ec4c060c4dda70ace5478a41b5e7b95eb035fe1c4cf85c48f996d35c60f8
+          - type: patch
+            path: patches/fontforge/drop-translations.patch
       - files/afdko/afdko.json
 
       - name: afdko-script
