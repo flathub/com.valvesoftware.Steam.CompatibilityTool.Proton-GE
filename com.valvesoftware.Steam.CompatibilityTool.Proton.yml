@@ -293,6 +293,8 @@ modules:
         path: winemaker-configure.sh
         dest: steam_helper
         dest-filename: configure
+      - type: patch
+        path: steam_helper-fix-hwnd-redefinition.patch
 
   - name: steam_helper-32bit
     subdir: steam_helper
