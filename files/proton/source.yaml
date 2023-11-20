@@ -1,7 +1,7 @@
 type: archive
-url: https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/GE-Proton8-16-1/proton-ge-custom-src.tar.xz
+url: https://github.com/Lctrs/proton-ge-custom-tarball-maker/releases/download/GE-Proton8-24-1/proton-ge-custom-src.tar.xz
 strip-components: 0
-sha256: c29d3f179ce2727c93c3f891ed81231a4709d92e68e01033be82b034b8c76c94
+sha256: 1c4108ff38c82c55979e09b7adae6bb98f58bd88c51ad0f55bf50e4a9c42eeb5
 x-checker-data:
   type: json
   url: https://api.github.com/repos/lctrs/proton-ge-custom-tarball-maker/releases/latest
