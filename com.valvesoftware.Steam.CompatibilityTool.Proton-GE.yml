@@ -1,1 +1,35 @@
-com.valvesoftware.Steam.CompatibilityTool.Proton.yml
+id: com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+default-branch: stable
+runtime: com.valvesoftware.Steam
+runtime-version: stable
+sdk: org.freedesktop.Sdk//23.08
+build-extension: true
+appstream-compose: false
+modules:
+  - name: proton
+    buildsystem: simple
+    sources:
+      # Proton-GE release archive
+      - type: file
+        url: https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton9-10/GE-Proton9-10.tar.gz
+        sha256: 6cfe3699ba1dd7dcf1c93d6093184bb8af05f554e8c04bdf6bb96ca64fad0f5b
+      # Patch to remove some lines which is required to get Steam games to launch with Proton-GE
+      - type: file
+        path: toolmanifest.patch
+      # Flatpak metainfo file
+      - type: file
+        path: com.valvesoftware.Steam.CompatibilityTool.Proton-GE.metainfo.xml
+    build-commands:
+      - |
+        echo "Extracting GE-Proton9-10.tar.gz to /app/share/steam/compatibilitytools.d/Proton-GE"
+        tar -xf GE-Proton9-10.tar.gz --strip-components=1 -C /app/share/steam/compatibilitytools.d/Proton-GE
+
+        echo "Patching toolmanifest.vdf"
+        patch /app/share/steam/compatibilitytools.d/Proton-GE/toolmanifest.vdf toolmanifest.patch
+
+        echo "Patching compatibilitytool.vdf to add (Flatpak) to Proton display name"
+        sed -i '0,/GE-Proton[^"]*/s//GE-Proton (Flatpak)/' /app/share/steam/compatibilitytools.d/Proton-GE/compatibilitytool.vdf # Replace first occurrence or GE-ProtonVERSION# (internal name) with GE-Proton (Flatpak)
+        sed -i 's/"display_name" "GE-Proton[^"]*\b/& (Flatpak)/' /app/share/steam/compatibilitytools.d/Proton-GE/compatibilitytool.vdf # Add (Flatpak) to the end of the Proton-GE display name
+
+        install -Dm644 -t ${FLATPAK_DEST}/share/metainfo com.valvesoftware.Steam.CompatibilityTool.Proton-GE.metainfo.xml
+        appstream-compose --basename=${FLATPAK_ID} --prefix=${FLATPAK_DEST} --origin=flatpak ${FLATPAK_ID}

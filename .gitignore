@@ -1,0 +1,11 @@
+# Flatpak Builder
+*.flatpak-builder
+
+# Flatpak bundle
+*.flatpak
+
+# Flatpak build-dir
+/build-dir
+
+# Flatpak repo
+/repo
