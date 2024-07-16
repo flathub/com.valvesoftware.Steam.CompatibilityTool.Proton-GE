@@ -1,0 +1,31 @@
+id: com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+default-branch: stable
+runtime: com.valvesoftware.Steam
+runtime-version: stable
+sdk: org.freedesktop.Sdk//23.08
+build-extension: true
+modules:
+  - name: proton
+    buildsystem: simple
+    sources:
+      # Proton-GE release archive
+      - type: archive
+        url: https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton9-10/GE-Proton9-10.tar.gz
+        sha256: 6cfe3699ba1dd7dcf1c93d6093184bb8af05f554e8c04bdf6bb96ca64fad0f5b
+        dest: GE-Proton
+      # Patch to remove some lines which is required to get Steam games to launch with Proton-GE
+      - type: patch
+        path: toolmanifest.patch
+      # Patch to change internal name to GE-Proton (Flatpak) and display name to GE-ProtonVERSION# (Flatpak)
+      - type: patch
+        path: compatibilitytool.patch
+      # Flatpak metainfo file
+      - type: file
+        path: com.valvesoftware.Steam.CompatibilityTool.Proton-GE.metainfo.xml
+    build-commands:
+      - |
+        echo "Moving release contents to /app/share/steam/compatibilitytools.d/Proton-GE"
+        mv GE-Proton/* /app/share/steam/compatibilitytools.d/Proton-GE
+
+        echo "Installing metainfo"
+        install -Dm644 -t ${FLATPAK_DEST}/share/metainfo com.valvesoftware.Steam.CompatibilityTool.Proton-GE.metainfo.xml

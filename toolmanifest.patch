@@ -1,7 +1,7 @@
-diff --git a/toolmanifest.vdf b/toolmanifest.vdf
+diff --git a/GE-Proton/toolmanifest.vdf b/GE-Proton/toolmanifest.vdf
 index beddcbb..b6f3678 100644
---- a/toolmanifest.vdf
-+++ b/toolmanifest.vdf
+--- a/GE-Proton/toolmanifest.vdf
++++ b/GE-Proton/toolmanifest.vdf
 @@ -2,7 +2,4 @@
  {
    "version" "2"
