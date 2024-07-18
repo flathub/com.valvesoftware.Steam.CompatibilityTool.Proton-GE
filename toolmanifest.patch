@@ -1,0 +1,12 @@
+diff --git a/GE-Proton/toolmanifest.vdf b/GE-Proton/toolmanifest.vdf
+index beddcbb..b6f3678 100644
+--- a/GE-Proton/toolmanifest.vdf
++++ b/GE-Proton/toolmanifest.vdf
+@@ -2,7 +2,4 @@
+ {
+   "version" "2"
+   "commandline" "/proton %verb%"
+-  "require_tool_appid" "1628350"
+-  "use_sessions" "1"
+-  "compatmanager_layer_name" "proton"
+ }

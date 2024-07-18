@@ -1,0 +1,22 @@
+diff --git a/GE-Proton/compatibilitytool.vdf b/GE-Proton/compatibilitytool.vdf
+index 41e3f33..fc68088 100644
+--- a/GE-Proton/compatibilitytool.vdf
++++ b/GE-Proton/compatibilitytool.vdf
+@@ -2,7 +2,7 @@
+ {
+   "compat_tools"
+   {
+-    "GE-Proton9-10" // Internal name of this tool
++    "GE-Proton (Flatpak)" // Internal name of this tool
+     {
+       // Can register this tool with Steam in two ways:
+       //
+@@ -14,7 +14,7 @@
+       "install_path" "."
+ 
+       // For this template, we're going to substitute the display_name key in here, e.g.:
+-      "display_name" "GE-Proton9-10"
++      "display_name" "GE-Proton9-10 (Flatpak)"
+ 
+       "from_oslist"  "windows"
+       "to_oslist"    "linux"
