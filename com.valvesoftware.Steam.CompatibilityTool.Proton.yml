@@ -2,7 +2,7 @@ id: com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 default-branch: stable
 runtime: com.valvesoftware.Steam
 runtime-version: stable
-sdk: org.freedesktop.Sdk//23.08
+sdk: org.freedesktop.Sdk//24.08
 build-extension: true
 modules:
   - name: proton
