@@ -6,7 +6,7 @@ index 41e3f33..fc68088 100644
  {
    "compat_tools"
    {
--    "GE-Proton9-20" // Internal name of this tool
+-    "GE-Proton9-21" // Internal name of this tool
 +    "GE-Proton (Flatpak)" // Internal name of this tool
      {
        // Can register this tool with Steam in two ways:
@@ -15,8 +15,8 @@ index 41e3f33..fc68088 100644
        "install_path" "."
  
        // For this template, we're going to substitute the display_name key in here, e.g.:
--      "display_name" "GE-Proton9-20"
-+      "display_name" "GE-Proton9-20 (Flatpak)"
+-      "display_name" "GE-Proton9-21"
++      "display_name" "GE-Proton9-21 (Flatpak)"
  
        "from_oslist"  "windows"
        "to_oslist"    "linux"
