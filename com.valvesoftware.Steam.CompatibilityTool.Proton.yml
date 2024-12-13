@@ -10,8 +10,8 @@ modules:
     sources:
       # Proton-GE release archive
       - type: archive
-        url: https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton9-20/GE-Proton9-20.tar.gz
-        sha256: 8c3599e26e5a5002e1b3f1211b0ac56bfddd6eb2c4dcbae7d81027182ed36c89
+        url: https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton9-21/GE-Proton9-21.tar.gz
+        sha256: f75530335fefb6d79942c21eadd21c94f522180ae589db55b3ca3f2166e94b04
         dest: GE-Proton
       # Patch to remove some lines which is required to get Steam games to launch with Proton-GE
       - type: patch
