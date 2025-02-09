@@ -16,6 +16,7 @@ modules:
         x-checker-data:
           type: json
           url: https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest
+          timestamp-query: .published_at
           version-query: .tag_name | ltrimstr("GE-Proton") | gsub("-"; ".")
           url-query: '[.assets[] | select(.name | test("GE-Proton[0-9-]+\\.tar\\.gz"))]
             | first | .browser_download_url'
@@ -25,8 +26,10 @@ modules:
       # Script to change internal name to GE-Proton (Flatpak) and display name to GE-ProtonVERSION# (Flatpak)
       - type: shell
         commands:
-          - sed -i -E 's/"display_name" "GE-Proton([0-9-]+)"/"display_name" "GE-Proton\1 (Flatpak)"/g' GE-Proton/compatibilitytool.vdf
-          - sed -i -E 's/"GE-Proton[0-9-]+" \/\/ Internal name of this tool/"GE-Proton (Flatpak)" \/\/ Internal name of this tool/g' GE-Proton/compatibilitytool.vdf
+          - sed -i -E 's/"display_name" "GE-Proton([0-9-]+)"/"display_name" "GE-Proton\1
+            (Flatpak)"/g' GE-Proton/compatibilitytool.vdf
+          - sed -i -E 's/"GE-Proton[0-9-]+" \/\/ Internal name of this tool/"GE-Proton
+            (Flatpak)" \/\/ Internal name of this tool/g' GE-Proton/compatibilitytool.vdf
       # Flatpak metainfo file
       - type: file
         path: com.valvesoftware.Steam.CompatibilityTool.Proton-GE.metainfo.xml
