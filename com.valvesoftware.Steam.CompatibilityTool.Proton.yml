@@ -10,15 +10,23 @@ modules:
     sources:
       # Proton-GE release archive
       - type: archive
-        url: https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton9-23/GE-Proton9-23.tar.gz
-        sha256: d695916e7e1b8cc9705ac4762c8b31145bc4244e150fc7d4230b52335302e88f
+        url: https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton9-24/GE-Proton9-24.tar.gz
+        sha256: 19d9b9636235edebd66bb5072c21ddaedc071f0cc2bf2230465a2904c4ad0ddc
         dest: GE-Proton
+        x-checker-data:
+          type: json
+          url: https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest
+          version-query: .tag_name | ltrimstr("GE-Proton") | gsub("-"; ".")
+          url-query: '[.assets[] | select(.name | test("GE-Proton[0-9-]+\\.tar\\.gz"))]
+            | first | .browser_download_url'
       # Patch to remove some lines which is required to get Steam games to launch with Proton-GE
       - type: patch
         path: toolmanifest.patch
-      # Patch to change internal name to GE-Proton (Flatpak) and display name to GE-ProtonVERSION# (Flatpak)
-      - type: patch
-        path: compatibilitytool.patch
+      # Script to change internal name to GE-Proton (Flatpak) and display name to GE-ProtonVERSION# (Flatpak)
+      - type: shell
+        commands:
+          - sed -i -E 's/"display_name" "GE-Proton([0-9-]+)"/"display_name" "GE-Proton\1 (Flatpak)"/g' GE-Proton/compatibilitytool.vdf
+          - sed -i -E 's/"GE-Proton[0-9-]+" \/\/ Internal name of this tool/"GE-Proton (Flatpak)" \/\/ Internal name of this tool/g' GE-Proton/compatibilitytool.vdf
       # Flatpak metainfo file
       - type: file
         path: com.valvesoftware.Steam.CompatibilityTool.Proton-GE.metainfo.xml
