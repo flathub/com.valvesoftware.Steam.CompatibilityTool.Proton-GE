@@ -8,8 +8,11 @@
   <project_license>BSD-3-Clause and LGPL-2.1 and zlib-acknowledgement and Zlib and OFL-1.1 and MIT and MPL-2.0 and LicenseRef-proprietary</project_license>
   <metadata_license>CC0-1.0</metadata_license>
   <releases>
-    <release version="10.7" date="2025-06-30">
+    <release version="10.8" date="2025-07-02">
       <description></description>
+    </release>
+    <release version="10.7" date="2025-06-30">
+      <description/>
     </release>
     <release version="10.5" date="2025-06-29">
       <description/>
