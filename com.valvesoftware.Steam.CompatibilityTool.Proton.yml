@@ -10,8 +10,8 @@ modules:
     sources:
       # Proton-GE release archive
       - type: archive
-        url: https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton10-21/GE-Proton10-21.tar.gz
-        sha256: bcc053290dfcb94cd3f88ddc67d96cb0421a08da8ec48554cf8a9f287f69b40b
+        url: https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton10-22/GE-Proton10-22.tar.gz
+        sha256: c51e66561cba18d2f88c296a46d4f02ef65ed6a461316ae7bed12697307d9716
         dest: GE-Proton
         x-checker-data:
           type: json
